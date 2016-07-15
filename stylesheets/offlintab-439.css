@@ -27,6 +27,7 @@
 
 
 #grid  .gap {
+  display: block;
   float: left;
   position: relative;
   width: 50px;
