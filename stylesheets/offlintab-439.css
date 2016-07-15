@@ -17,7 +17,7 @@
 
 #grid > ol {
   list-style: none;
-  margin: -10px auto 50px;
+  /*margin: -10px auto 50px;*/
   max-width: 1160px;
   overflow: hidden;
   width: calc(100% - 2 * 40px);
@@ -31,7 +31,7 @@
   height: 125px;
   margin: 10px;
   position: relative;
-  width: calc((100% - 80px) / 4);
+  width: 100px;
 }
 
 #grid > ol > li > a {
