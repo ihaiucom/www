@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>TypeScript学习</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+    <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shThemeDefault.css"/>
+
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushCSharp.js"></script>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+      
+
+      
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>TypeScript学习</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2018-05-30">2018-05-30</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#Html5" title="Html5">Html5</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#Html5" title="Html5">Html5</a>&nbsp;
+  
+  <a href="/tags/#TypeScript" title="TypeScript">TypeScript</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<p><br />
+<br /></p>
+<h2 class="nav1">安装node.js</h2>
+<p><a href="https://nodejs.org/en/" target="_blank">https://nodejs.org/en/</a> 下载安装</p>
+<p>node.js模块管理中心 <a href="https://www.npmjs.com" target="_blank">https://www.npmjs.com</a></p>
+<p>可用得到两个命令</p>
+<pre>
+node --version
+npm --version
+</pre>
+
+<p><br />
+<br /></p>
+<h2 class="nav1">安装TypeScript依赖环境</h2>
+<pre>
+npm install -g typescript
+</pre>
+<p>执行命令后会打印</p>
+<pre>
+C:\Users\Administrator\AppData\Roaming\npm\tsserver -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\typescript\bin\tsserver
+C:\Users\Administrator\AppData\Roaming\npm\tsc -&gt; C:\Users\Administrator\AppData\Roaming\npm\node_modules\typescript\bin\tsc
++ typescript@2.8.3
+added 1 package from 1 contributor in 12.914s
+</pre>
+<p><br />
+<br /></p>
+
+<h2>检查TypeScript编译环境版本</h2>
+<pre>
+tsc -v
+</pre>
+<p>执行命令后会打印</p>
+<pre>
+Version 2.8.3
+</pre>
+
+<h2 class="nav1">变量定义 var</h2>
+
+<p>同一个作用域可以多次定义</p>
+<pre>
+var a = 1;
+var a = 2;
+var a = 3;
+</pre>
+<p><br /></p>
+
+<p>同一个作用域可以多次定义, 造成外面一层for没正常运行<br />
+for 不是作用域，他算是f里的函数域<br />
+用let定义， for里也是一个作用域<br />
+在其他语言， 不允许再定义相同名称的变量</p>
+<pre>
+
+function f()
+{
+   for(var i = 0; i &lt; 2; i ++)
+   {
+       print(`~~ ${i}`);
+       for(var i = 0; i &lt; 3; i ++)
+       {
+             print(`row ${i}`);
+       }
+       log(`##i=${i}`)
+   }
+
+   log(`@@i=${i}`)
+}
+
+</pre>
+
+<pre>
+~~i=0
+row i=0
+row i=1
+row i=2
+##i=3
+@@i=4
+</pre>
+<p><br /></p>
+
+<p>同一个作用域可以在任何地方定义<br />
+用let定义，是不能在定义之前调用的, 否则编辑器会提示错误<br /></p>
+
+<pre>
+var a = 1;
+function f()
+{
+     a = 100; // 可以在定义之前就赋值，运行时他已经定义了， 就算外层有定义a=1，这里的a也是f函数作用域的
+     var a;
+
+     print(a); // 100
+}
+
+f();
+print(a); // 1
+</pre>
+<p><br /></p>
+
+<p>if 不是作用域，他算是f里的函数域<br />
+用let定义， if里也是一个作用域。 a = 100; 将会修改闭包方法里定义的a=1<br />
+在其他语言,if里也是一个作用域, 并且在定义变量前 a将用的是闭包方法里声明的变量</p>
+<pre>
+var a = 1;
+function f(isIn:boolean = false)
+{
+     a = 100;
+     if(isIn)
+     {
+          var a;
+     }
+
+     log(a); // 100
+}
+
+f();
+log(a); // 1
+</pre>
+
+<pre>
+var a = 1;
+function f(isIn:boolean = false)
+{
+     a = 100;
+     if(isIn)
+     {
+          let a; // 这里的a只在if语句块里有效
+     }
+
+     log(a); // 100
+}
+
+f();
+log(a); // 100
+</pre>
+<p><br /></p>
+
+<p>setTimeout调的函数里方法的变量，始终都是读取的闭包方法上层定义的变量</p>
+<pre>
+function f()
+{
+        for(var i = 0; i &lt; 10; i ++)
+        {
+            setTimeout(function() {
+                log(i); //打印的始终都是10
+            }, 100 * i);
+        }
+} 
+</pre>
+
+<p>解决方法是, 再封一层闭包<br />
+用let定义，编译后的 js 也是这样实现的</p>
+
+<pre>
+function f()
+{
+        for(var i = 0; i &lt; 10; i ++)
+        {
+            (function(val)
+            {
+                setTimeout(function() { log(val); }, 100 * val);
+            })(i);
+            
+        }
+} 
+</pre>
+
+<h2 class="nav1">变量定义 let</h2>
+
+<p>let 定义的变量，不可以在区域块外调用，否则会提示错误。<br />
+let 定义的变量，if 、for都将是作用域</p>
+<p><img src="/assets/docpic/typescript_let_1.png" style="border: solid 1px #666;" /></p>
+<p><br /></p>
+
+<p>不可以在let定义前调用, 否则会提示错误</p>
+<p><img src="/assets/docpic/typescript_let_2.png" style="border: solid 1px #666;" /></p>
+<p><br /></p>
+
+<p>下面这种情况 if外面的 a将是 <b>var a=1</b>那定义的</p>
+<p><img src="/assets/docpic/typescript_let_3.png" style="border: solid 1px #666;" /></p>
+<p>编译后的js</p>
+<p><img src="/assets/docpic/typescript_let_4.png" style="border: solid 1px #666;" /></p>
+<p><br /></p>
+
+<p>在同一作用域不可以重复定义let变量</p>
+<p><img src="/assets/docpic/typescript_let_6.png" style="border: solid 1px #666;" /></p>
+<p>编译后的js<br />
+所有可以这么说, let定义的变量，再闭包方法情况下，上下文都有相同的变量名。在编译成js后，将会给他们分别命名</p>
+<p><img src="/assets/docpic/typescript_let_7.png" style="border: solid 1px #666;" /></p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/typescript_let_8.png" style="border: solid 1px #666;" /></p>
+<p>编译后的js<br /></p>
+<p><img src="/assets/docpic/typescript_let_9.png" style="border: solid 1px #666;" /></p>
+<p><br /></p>
+
+<p>在一个嵌套作用域里引入一个新名字的行为称做屏蔽。 它是一把双刃剑，它可能会不小心地引入新问题，同时也可能会解决一些错误。 例如，假设我们现在用 let重写之前的sumMatrix函数。</p>
+
+<p><img src="/assets/docpic/typescript_let_10.png" style="border: solid 1px #666;" /></p>
+<p>编译后的js<br /></p>
+<p><img src="/assets/docpic/typescript_let_11.png" style="border: solid 1px #666;" /></p>
+<p>输出:</p>
+<pre>
+row i=1
+row i=2
+##i=1
+~~i=2
+row i=0
+row i=1
+row i=2
+##i=2
+~~i=3
+row i=0
+row i=1
+row i=2
+##i=3
+sum = 324
+</pre>
+
+<p><br /></p>
+
+<h3>块级作用域变量的获取<h3>
+
+<p><img src="/assets/docpic/typescript_let_12.png" style="border: solid 1px #666;" /></p>
+编译后的js<br />
+<p><img src="/assets/docpic/typescript_let_13.png" style="border: solid 1px #666;" /></p>
+</h3></h3>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/HTML5/#content" class="pageNav"  >上一篇: Html5学习</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/unity-SplitAtlas/#content" class="pageNav"  >下一篇: Unity 图集分割</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "201805152000",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+

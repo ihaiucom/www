@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>最短路径算法之 Floyd</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+    <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shThemeDefault.css"/>
+
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushJScript.js"></script>
+      
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>最短路径算法之 Floyd</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2018-12-27">2018-12-27</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#算法" title="算法">算法</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#算法" title="算法">算法</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<p><br />
+<br /></p>
+
+<p><a href="https://www.lintcode.com/problem/minimum-risk-path/description" target="_blank">783. 最小危险值路径</a><br /></p>
+
+<h3 id="floydts">Floyd.ts</h3>
+
+<pre class="brush: js; ">
+namespace ihaiu
+{
+    export class Floyd
+    {
+        constructor()
+        {
+
+        }
+
+        // 顶点数
+        nodeNum: number= 0;
+
+        // 成本矩阵
+        arcs: number[][];
+
+        // 路径字典
+        pathMap: number[][][];
+
+        /** 获取路径 */
+        public getPath(from: number, to: number): number[]
+        {
+            return this.pathMap[from][to];
+        }
+
+
+        /** 获取路径成本 */
+        public getArcs(from: number, to: number): number
+        {
+            return this.arcs[from][to];
+        }
+
+        /** 获取路径中最大成本 */
+        public getPathMaxArc(from: number, to: number): number
+        {
+            return this.getPathMaxArcByPath(this.getPath(from, to));
+        }
+
+        public getPathMaxArcByPath(ponts: number[]): number
+        {
+            let max = -1;
+            for(let i = 0; i &lt; ponts.length - 1; i ++)
+            {
+                let u = ponts[i];
+                let v = ponts[i + 1];
+                let d = this.arcs[u][v];
+                if(d &gt; max)
+                {
+                    max = d;
+                }
+            }
+            return max;
+        }
+
+        /** 计算寻路 */
+        public calculation(nodeNum: number, edegeNum: number, x: number[], y: number[], w: number[])
+        {
+            // 成本矩阵
+            let arcs: number[][] = [];
+            // 路径矩阵
+            let path: number[][] = [];
+
+            // 矫正顶点数量
+            let num = 0;
+            for(let i = 0; i &lt; x.length; i ++)
+            {  
+                num = Math.max(x[i], num);
+                num = Math.max(y[i], num);
+            }
+            nodeNum = Math.max(num + 1, nodeNum);
+            this.nodeNum = nodeNum;
+            
+
+
+            // 初始化矩阵值
+            for(let u = 0; u &lt; nodeNum; u ++)
+            {
+                arcs[u] = [];
+                path[u] = [];
+
+                for(let v = 0; v &lt; nodeNum; v ++)
+                {
+                    if( u != v)
+                    {
+                        arcs[u][v] = Number.MAX_VALUE;
+                    }
+                    else
+                    {
+                        // 同一个点，成本是0
+                        arcs[u][v] = 0;
+                    }
+                    path[u][v] = v;
+                }
+            }
+
+
+            this.print(arcs, nodeNum, -1);
+
+            // 输入边
+            for(let i = 0; i &lt; x.length; i ++)
+            {
+                let u = x[i];
+                let v = y[i];
+                arcs[u][v] = w[i];
+                arcs[v][u] = w[i];
+            }
+            
+            // floyd算法
+            // if ( arcs[i][k]  + arcs[k][j] &lt; arcs[i][j] )
+            //     arcs[i][j] = arcs[i][k] + arcs[k][j]
+
+            for(let k = 0; k &lt; nodeNum; k ++)
+            {
+                for(let i = 0; i &lt; nodeNum; i ++)
+                {
+                    for(let j = 0; j &lt; nodeNum; j ++)
+                    {
+                        if( arcs[i][k] &lt; Number.MAX_VALUE &amp;&amp; arcs[k][j] &lt; Number.MAX_VALUE )
+                        {
+                            let d = arcs[i][k] + arcs[k][j];
+                            if(d &lt; arcs[i][j])
+                            {
+                                arcs[i][j] = d;
+                                path[i][j] = path[i][k];
+                            }
+                        }
+                    }
+                }
+
+                this.print(arcs, nodeNum, k);
+            }
+            
+
+            // 路径字典
+            let pathMap: number[][][] = this.generatePathMap(arcs, path, nodeNum);
+
+            this.printPathMap(arcs, pathMap, nodeNum);
+
+            this.arcs = arcs;
+            this.pathMap = pathMap;
+        }
+
+
+        // 生存路径字典
+        generatePathMap(arcs: number[][], path: number[][], nodeNum: number): number[][][]
+        {
+            // 路径字典
+            let pathMap: number[][][] = [];
+            let temp = 0;
+            for(let u = 0; u &lt; nodeNum; u ++)
+            {
+                pathMap[u] = [];
+                let str = &quot;&quot;;
+                for(let v = 0; v &lt; nodeNum; v ++)
+                {
+                    let points = pathMap[u][v]=[];
+                    points.push(u);
+                    temp = path[u][v];
+                    while(temp != v)
+                    {
+                        points.push(temp);
+                        temp = path[temp][v];
+                    }
+                    points.push(v);
+                }
+
+            }
+
+            return pathMap;
+        }
+
+        // 打印矩阵
+        print(arcs: number[][], nodeNum: number, index: number)
+        {
+            return;
+            console.log(&quot;step of %d:&quot;, index);
+            for(let u = 0; u &lt; nodeNum; u ++)
+            {
+                let str = &quot;&quot;;
+                for(let v = 0; v &lt; nodeNum; v ++)
+                {
+                    if(arcs[u][v] &lt; Number.MAX_VALUE)
+                    {
+                        str += arcs[u][v] + &quot;  &quot;;
+                    }
+                    else
+                    {
+                        str +=  &quot;∞  &quot;;
+                    }
+                }
+                str += &quot;\n&quot;;
+                console.log(str);
+            }
+        }
+
+        // 打印路径
+        printPath(arcs: number[][], path: number[][], nodeNum: number)
+        {
+            console.log(&quot;path:&quot;);
+            let temp = 0;
+            for(let u = 0; u &lt; nodeNum; u ++)
+            {
+                let str = &quot;&quot;;
+                for(let v = 0; v &lt; nodeNum; v ++)
+                {
+                    str += u + &quot; -&gt; &quot; + v + &quot;, weight:&quot; + arcs[u][v] + &quot;:&quot; + u;
+
+                    temp = path[u][v];
+                    while(temp != v)
+                    {
+                        str += &quot;-&gt;&quot; + temp;
+                        temp = path[temp][v];
+                    }
+                    str += &quot;-&gt;&quot; + v + &quot;\n&quot;;
+                }
+
+                console.log(str);
+
+            }
+        }
+
+        // 打印路径字典
+        printPathMap(arcs: number[][], pathMap: number[][][], nodeNum: number)
+        {
+            console.log(&quot;pathMap:&quot;);
+            let temp = 0;
+            for(let u = 0; u &lt; nodeNum; u ++)
+            {
+                let str = &quot;&quot;;
+                for(let v = 0; v &lt; nodeNum; v ++)
+                {
+                    str += u + &quot; -&gt; &quot; + v + &quot;, weight:&quot; + arcs[u][v] + &quot;:&quot; ;
+
+                    let points = pathMap[u][v];
+                    if(points.length &lt; 2)
+                        console;
+
+                    str += points[0];
+                    for(let i = 1; i &lt; points.length - 1; i ++)
+                    {
+                        str += &quot;-&gt;&quot; + points[i];
+                    }
+
+                    str += &quot;-&gt;&quot; + points[points.length - 1] + &quot;\n&quot;;
+                }
+
+                console.log(str);
+
+            }
+        }
+
+
+
+
+
+    }
+}
+</pre>
+
+<h3 id="gamemaints">GameMain.ts</h3>
+
+<pre class="brush: js; ">
+
+namespace ihaiu
+{
+
+    // 程序入口
+    export class GameMain
+    {
+        constructor()
+        {
+
+            // this.test1();
+            // this.test2();
+            this.test3();
+            // this.test4();
+        }
+
+        test1()
+        {
+            let x: number[];
+            let y: number[];
+            let w: number[];
+            let n: number;
+            let m: number;
+
+            n = 2, m = 2, x = [0, 1], y = [1, 2], w = [1, 2]; //返回2。
+             
+            let floyd = new Floyd();
+            floyd.calculation(n, m, x, y, w);
+            console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+       
+
+        }
+
+        test2()
+        {
+            let x: number[];
+            let y: number[];
+            let w: number[];
+            let n: number;
+            let m: number;
+            n = 3, m = 4, x = [0, 0, 1, 2], y = [1, 2, 3, 3], w = [1, 2, 3, 4]; //返回3
+
+            let floyd = new Floyd();
+            floyd.calculation(n, m, x, y, w);
+            console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+        }
+
+        
+        test3()
+        {
+            let x: number[];
+            let y: number[];
+            let w: number[];
+            let n: number;
+            let m: number;
+            
+            n = 4, m = 5, x = [0, 1, 1, 2, 3], y = [1, 2, 3, 4, 4], w = [3, 2, 4, 2, 1]; //返回3
+
+
+            let floyd = new Floyd();
+            floyd.calculation(n, m, x, y, w);
+            console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+        }
+
+        
+        test4()
+        {
+            let x: number[];
+            let y: number[];
+            let w: number[];
+            let n: number;
+            let m: number;
+            
+            n = 5, m = 7, x = [0, 0, 1, 2, 3, 3, 4], y = [1, 2, 3, 4, 4, 5, 5], w = [2, 5, 3, 4, 3, 4, 1]; //返回4
+
+
+            let floyd = new Floyd();
+            floyd.calculation(n, m, x, y, w);
+            console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+        }
+    }
+
+}
+
+setTimeout(function() 
+{ 
+    new ihaiu.GameMain();
+}, 100);
+
+</pre>
+
+<h3 id="日志">日志</h3>
+
+<pre>
+
+pathMap:
+0 -&gt; 0, weight:0:0-&gt;0
+0 -&gt; 1, weight:3:0-&gt;1
+0 -&gt; 2, weight:5:0-&gt;1-&gt;2
+0 -&gt; 3, weight:7:0-&gt;1-&gt;3
+0 -&gt; 4, weight:7:0-&gt;1-&gt;2-&gt;4
+
+1 -&gt; 0, weight:3:1-&gt;0
+1 -&gt; 1, weight:0:1-&gt;1
+1 -&gt; 2, weight:2:1-&gt;2
+1 -&gt; 3, weight:4:1-&gt;3
+1 -&gt; 4, weight:4:1-&gt;2-&gt;4
+
+2 -&gt; 0, weight:5:2-&gt;1-&gt;0
+2 -&gt; 1, weight:2:2-&gt;1
+2 -&gt; 2, weight:0:2-&gt;2
+2 -&gt; 3, weight:3:2-&gt;4-&gt;3
+2 -&gt; 4, weight:2:2-&gt;4
+
+3 -&gt; 0, weight:7:3-&gt;1-&gt;0
+3 -&gt; 1, weight:4:3-&gt;1
+3 -&gt; 2, weight:3:3-&gt;4-&gt;2
+3 -&gt; 3, weight:0:3-&gt;3
+3 -&gt; 4, weight:1:3-&gt;4
+
+4 -&gt; 0, weight:7:4-&gt;2-&gt;1-&gt;0
+4 -&gt; 1, weight:4:4-&gt;2-&gt;1
+4 -&gt; 2, weight:2:4-&gt;2
+4 -&gt; 3, weight:1:4-&gt;3
+4 -&gt; 4, weight:0:4-&gt;4
+
+The minimum risk value is: 3
+
+</pre>
+
+<p><img src="/assets/docpic/floyd.jpg" style="border: solid 1px #666;" /></p>
+
+<h3 id="测试数据1">测试数据1</h3>
+
+<pre class="brush: js; ">
+
+testData_1()
+{
+    
+    let x: number[];
+    let y: number[];
+    let w: number[];
+    let n: number;
+    let m: number;
+
+    n = 21;
+    m =57;
+    x = [0,6,0,2,18,10,8,20,18,10,17,4,13,0,16,11,20,2,11,20,8,4,6,2,14,0,13,20,14,11,4,21,10,6,0,18,8,11,11,1,12,20,10,12,14,0,19,18,21,16,6,2,20,0,2,4,2]
+    y = [21,12,16,4,12,16,18,10,2,21,16,8,10,18,18,20,0,0,18,14,10,0,5,5,6,10,21,8,10,10,14,2,12,0,7,4,16,17,21,2,2,6,15,14,18,9,1,20,4,4,18,16,4,15,11,1,20]
+    w = [935,34009,59451,45352,14875,83529,89136,67961,37503,6026,27485,218,71477,84628,13389,50306,25117,79418,41787,48302,33630,31638,46513,53891,31721,195,74893,74913,93905,51507,42081,17165,17281,90736,42233,97501,15441,68372,60001,67999,8796,27121,47312,2666,49181,15835,86363,6183,7637,93817,98081,80625,82855,55521,70109,99009,90159]
+
+
+    let floyd = new Floyd();
+    floyd.calculation(n, m, x, y, w);
+    console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+
+}
+</pre>
+
+<h2 id="日志-1">日志</h2>
+
+<pre>
+Floyd.js:151 pathMap:
+Floyd.js:166 0 -&gt; 0, weight:0:0-&gt;0
+0 -&gt; 1, weight:86099:0-&gt;21-&gt;2-&gt;1
+0 -&gt; 2, weight:18100:0-&gt;21-&gt;2
+0 -&gt; 3, weight:1.7976931348623157e+308:0-&gt;3
+0 -&gt; 4, weight:8572:0-&gt;21-&gt;4
+0 -&gt; 5, weight:71991:0-&gt;21-&gt;2-&gt;5
+0 -&gt; 6, weight:51485:0-&gt;10-&gt;12-&gt;6
+0 -&gt; 7, weight:42233:0-&gt;7
+0 -&gt; 8, weight:8790:0-&gt;21-&gt;4-&gt;8
+0 -&gt; 9, weight:15835:0-&gt;9
+0 -&gt; 10, weight:195:0-&gt;10
+0 -&gt; 11, weight:51702:0-&gt;10-&gt;11
+0 -&gt; 12, weight:17476:0-&gt;10-&gt;12
+0 -&gt; 13, weight:71672:0-&gt;10-&gt;13
+0 -&gt; 14, weight:20142:0-&gt;10-&gt;12-&gt;14
+0 -&gt; 15, weight:47507:0-&gt;10-&gt;15
+0 -&gt; 16, weight:24231:0-&gt;21-&gt;4-&gt;8-&gt;16
+0 -&gt; 17, weight:51716:0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+0 -&gt; 18, weight:31300:0-&gt;20-&gt;18
+0 -&gt; 19, weight:172462:0-&gt;21-&gt;2-&gt;1-&gt;19
+0 -&gt; 20, weight:25117:0-&gt;20
+0 -&gt; 21, weight:935:0-&gt;21
+
+Floyd.js:166 1 -&gt; 0, weight:86099:1-&gt;2-&gt;21-&gt;0
+1 -&gt; 1, weight:0:1-&gt;1
+1 -&gt; 2, weight:67999:1-&gt;2
+1 -&gt; 3, weight:1.7976931348623157e+308:1-&gt;3
+1 -&gt; 4, weight:92801:1-&gt;2-&gt;21-&gt;4
+1 -&gt; 5, weight:121890:1-&gt;2-&gt;5
+1 -&gt; 6, weight:110804:1-&gt;2-&gt;12-&gt;6
+1 -&gt; 7, weight:128332:1-&gt;2-&gt;21-&gt;0-&gt;7
+1 -&gt; 8, weight:93019:1-&gt;2-&gt;21-&gt;4-&gt;8
+1 -&gt; 9, weight:101934:1-&gt;2-&gt;21-&gt;0-&gt;9
+1 -&gt; 10, weight:86294:1-&gt;2-&gt;21-&gt;0-&gt;10
+1 -&gt; 11, weight:133457:1-&gt;2-&gt;12-&gt;18-&gt;11
+1 -&gt; 12, weight:76795:1-&gt;2-&gt;12
+1 -&gt; 13, weight:157771:1-&gt;2-&gt;21-&gt;0-&gt;10-&gt;13
+1 -&gt; 14, weight:79461:1-&gt;2-&gt;12-&gt;14
+1 -&gt; 15, weight:133606:1-&gt;2-&gt;21-&gt;0-&gt;10-&gt;15
+1 -&gt; 16, weight:105059:1-&gt;2-&gt;12-&gt;18-&gt;16
+1 -&gt; 17, weight:132544:1-&gt;2-&gt;12-&gt;18-&gt;16-&gt;17
+1 -&gt; 18, weight:91670:1-&gt;2-&gt;12-&gt;18
+1 -&gt; 19, weight:86363:1-&gt;19
+1 -&gt; 20, weight:97853:1-&gt;2-&gt;12-&gt;18-&gt;20
+1 -&gt; 21, weight:85164:1-&gt;2-&gt;21
+
+Floyd.js:166 2 -&gt; 0, weight:18100:2-&gt;21-&gt;0
+2 -&gt; 1, weight:67999:2-&gt;1
+2 -&gt; 2, weight:0:2-&gt;2
+2 -&gt; 3, weight:1.7976931348623157e+308:2-&gt;3
+2 -&gt; 4, weight:24802:2-&gt;21-&gt;4
+2 -&gt; 5, weight:53891:2-&gt;5
+2 -&gt; 6, weight:42805:2-&gt;12-&gt;6
+2 -&gt; 7, weight:60333:2-&gt;21-&gt;0-&gt;7
+2 -&gt; 8, weight:25020:2-&gt;21-&gt;4-&gt;8
+2 -&gt; 9, weight:33935:2-&gt;21-&gt;0-&gt;9
+2 -&gt; 10, weight:18295:2-&gt;21-&gt;0-&gt;10
+2 -&gt; 11, weight:65458:2-&gt;12-&gt;18-&gt;11
+2 -&gt; 12, weight:8796:2-&gt;12
+2 -&gt; 13, weight:89772:2-&gt;21-&gt;0-&gt;10-&gt;13
+2 -&gt; 14, weight:11462:2-&gt;12-&gt;14
+2 -&gt; 15, weight:65607:2-&gt;21-&gt;0-&gt;10-&gt;15
+2 -&gt; 16, weight:37060:2-&gt;12-&gt;18-&gt;16
+2 -&gt; 17, weight:64545:2-&gt;12-&gt;18-&gt;16-&gt;17
+2 -&gt; 18, weight:23671:2-&gt;12-&gt;18
+2 -&gt; 19, weight:154362:2-&gt;1-&gt;19
+2 -&gt; 20, weight:29854:2-&gt;12-&gt;18-&gt;20
+2 -&gt; 21, weight:17165:2-&gt;21
+
+Floyd.js:166 3 -&gt; 0, weight:1.7976931348623157e+308:3-&gt;0
+3 -&gt; 1, weight:1.7976931348623157e+308:3-&gt;1
+3 -&gt; 2, weight:1.7976931348623157e+308:3-&gt;2
+3 -&gt; 3, weight:0:3-&gt;3
+3 -&gt; 4, weight:1.7976931348623157e+308:3-&gt;4
+3 -&gt; 5, weight:1.7976931348623157e+308:3-&gt;5
+3 -&gt; 6, weight:1.7976931348623157e+308:3-&gt;6
+3 -&gt; 7, weight:1.7976931348623157e+308:3-&gt;7
+3 -&gt; 8, weight:1.7976931348623157e+308:3-&gt;8
+3 -&gt; 9, weight:1.7976931348623157e+308:3-&gt;9
+3 -&gt; 10, weight:1.7976931348623157e+308:3-&gt;10
+3 -&gt; 11, weight:1.7976931348623157e+308:3-&gt;11
+3 -&gt; 12, weight:1.7976931348623157e+308:3-&gt;12
+3 -&gt; 13, weight:1.7976931348623157e+308:3-&gt;13
+3 -&gt; 14, weight:1.7976931348623157e+308:3-&gt;14
+3 -&gt; 15, weight:1.7976931348623157e+308:3-&gt;15
+3 -&gt; 16, weight:1.7976931348623157e+308:3-&gt;16
+3 -&gt; 17, weight:1.7976931348623157e+308:3-&gt;17
+3 -&gt; 18, weight:1.7976931348623157e+308:3-&gt;18
+3 -&gt; 19, weight:1.7976931348623157e+308:3-&gt;19
+3 -&gt; 20, weight:1.7976931348623157e+308:3-&gt;20
+3 -&gt; 21, weight:1.7976931348623157e+308:3-&gt;21
+
+Floyd.js:166 4 -&gt; 0, weight:8572:4-&gt;21-&gt;0
+4 -&gt; 1, weight:92801:4-&gt;21-&gt;2-&gt;1
+4 -&gt; 2, weight:24802:4-&gt;21-&gt;2
+4 -&gt; 3, weight:1.7976931348623157e+308:4-&gt;3
+4 -&gt; 4, weight:0:4-&gt;4
+4 -&gt; 5, weight:78693:4-&gt;21-&gt;2-&gt;5
+4 -&gt; 6, weight:60057:4-&gt;21-&gt;0-&gt;10-&gt;12-&gt;6
+4 -&gt; 7, weight:50805:4-&gt;21-&gt;0-&gt;7
+4 -&gt; 8, weight:218:4-&gt;8
+4 -&gt; 9, weight:24407:4-&gt;21-&gt;0-&gt;9
+4 -&gt; 10, weight:8767:4-&gt;21-&gt;0-&gt;10
+4 -&gt; 11, weight:60274:4-&gt;21-&gt;0-&gt;10-&gt;11
+4 -&gt; 12, weight:26048:4-&gt;21-&gt;0-&gt;10-&gt;12
+4 -&gt; 13, weight:80244:4-&gt;21-&gt;0-&gt;10-&gt;13
+4 -&gt; 14, weight:28714:4-&gt;21-&gt;0-&gt;10-&gt;12-&gt;14
+4 -&gt; 15, weight:56079:4-&gt;21-&gt;0-&gt;10-&gt;15
+4 -&gt; 16, weight:15659:4-&gt;8-&gt;16
+4 -&gt; 17, weight:43144:4-&gt;8-&gt;16-&gt;17
+4 -&gt; 18, weight:29048:4-&gt;8-&gt;16-&gt;18
+4 -&gt; 19, weight:179164:4-&gt;21-&gt;2-&gt;1-&gt;19
+4 -&gt; 20, weight:33689:4-&gt;21-&gt;0-&gt;20
+4 -&gt; 21, weight:7637:4-&gt;21
+
+Floyd.js:166 5 -&gt; 0, weight:71991:5-&gt;2-&gt;21-&gt;0
+5 -&gt; 1, weight:121890:5-&gt;2-&gt;1
+5 -&gt; 2, weight:53891:5-&gt;2
+5 -&gt; 3, weight:1.7976931348623157e+308:5-&gt;3
+5 -&gt; 4, weight:78693:5-&gt;2-&gt;21-&gt;4
+5 -&gt; 5, weight:0:5-&gt;5
+5 -&gt; 6, weight:46513:5-&gt;6
+5 -&gt; 7, weight:114224:5-&gt;2-&gt;21-&gt;0-&gt;7
+5 -&gt; 8, weight:78911:5-&gt;2-&gt;21-&gt;4-&gt;8
+5 -&gt; 9, weight:87826:5-&gt;2-&gt;21-&gt;0-&gt;9
+5 -&gt; 10, weight:72186:5-&gt;2-&gt;21-&gt;0-&gt;10
+5 -&gt; 11, weight:119349:5-&gt;2-&gt;12-&gt;18-&gt;11
+5 -&gt; 12, weight:62687:5-&gt;2-&gt;12
+5 -&gt; 13, weight:143663:5-&gt;2-&gt;21-&gt;0-&gt;10-&gt;13
+5 -&gt; 14, weight:65353:5-&gt;2-&gt;12-&gt;14
+5 -&gt; 15, weight:119498:5-&gt;2-&gt;21-&gt;0-&gt;10-&gt;15
+5 -&gt; 16, weight:90951:5-&gt;2-&gt;12-&gt;18-&gt;16
+5 -&gt; 17, weight:118436:5-&gt;2-&gt;12-&gt;18-&gt;16-&gt;17
+5 -&gt; 18, weight:77562:5-&gt;2-&gt;12-&gt;18
+5 -&gt; 19, weight:208253:5-&gt;2-&gt;1-&gt;19
+5 -&gt; 20, weight:73634:5-&gt;6-&gt;20
+5 -&gt; 21, weight:71056:5-&gt;2-&gt;21
+
+Floyd.js:166 6 -&gt; 0, weight:51485:6-&gt;12-&gt;10-&gt;0
+6 -&gt; 1, weight:110804:6-&gt;12-&gt;2-&gt;1
+6 -&gt; 2, weight:42805:6-&gt;12-&gt;2
+6 -&gt; 3, weight:1.7976931348623157e+308:6-&gt;3
+6 -&gt; 4, weight:60057:6-&gt;12-&gt;10-&gt;0-&gt;21-&gt;4
+6 -&gt; 5, weight:46513:6-&gt;5
+6 -&gt; 6, weight:0:6-&gt;6
+6 -&gt; 7, weight:93718:6-&gt;12-&gt;10-&gt;0-&gt;7
+6 -&gt; 8, weight:60275:6-&gt;12-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+6 -&gt; 9, weight:67320:6-&gt;12-&gt;10-&gt;0-&gt;9
+6 -&gt; 10, weight:51290:6-&gt;12-&gt;10
+6 -&gt; 11, weight:75091:6-&gt;20-&gt;18-&gt;11
+6 -&gt; 12, weight:34009:6-&gt;12
+6 -&gt; 13, weight:122767:6-&gt;12-&gt;10-&gt;13
+6 -&gt; 14, weight:31721:6-&gt;14
+6 -&gt; 15, weight:98602:6-&gt;12-&gt;10-&gt;15
+6 -&gt; 16, weight:46693:6-&gt;20-&gt;18-&gt;16
+6 -&gt; 17, weight:74178:6-&gt;20-&gt;18-&gt;16-&gt;17
+6 -&gt; 18, weight:33304:6-&gt;20-&gt;18
+6 -&gt; 19, weight:197167:6-&gt;12-&gt;2-&gt;1-&gt;19
+6 -&gt; 20, weight:27121:6-&gt;20
+6 -&gt; 21, weight:52420:6-&gt;12-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 7 -&gt; 0, weight:42233:7-&gt;0
+7 -&gt; 1, weight:128332:7-&gt;0-&gt;21-&gt;2-&gt;1
+7 -&gt; 2, weight:60333:7-&gt;0-&gt;21-&gt;2
+7 -&gt; 3, weight:1.7976931348623157e+308:7-&gt;3
+7 -&gt; 4, weight:50805:7-&gt;0-&gt;21-&gt;4
+7 -&gt; 5, weight:114224:7-&gt;0-&gt;21-&gt;2-&gt;5
+7 -&gt; 6, weight:93718:7-&gt;0-&gt;10-&gt;12-&gt;6
+7 -&gt; 7, weight:0:7-&gt;7
+7 -&gt; 8, weight:51023:7-&gt;0-&gt;21-&gt;4-&gt;8
+7 -&gt; 9, weight:58068:7-&gt;0-&gt;9
+7 -&gt; 10, weight:42428:7-&gt;0-&gt;10
+7 -&gt; 11, weight:93935:7-&gt;0-&gt;10-&gt;11
+7 -&gt; 12, weight:59709:7-&gt;0-&gt;10-&gt;12
+7 -&gt; 13, weight:113905:7-&gt;0-&gt;10-&gt;13
+7 -&gt; 14, weight:62375:7-&gt;0-&gt;10-&gt;12-&gt;14
+7 -&gt; 15, weight:89740:7-&gt;0-&gt;10-&gt;15
+7 -&gt; 16, weight:66464:7-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16
+7 -&gt; 17, weight:93949:7-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+7 -&gt; 18, weight:73533:7-&gt;0-&gt;20-&gt;18
+7 -&gt; 19, weight:214695:7-&gt;0-&gt;21-&gt;2-&gt;1-&gt;19
+7 -&gt; 20, weight:67350:7-&gt;0-&gt;20
+7 -&gt; 21, weight:43168:7-&gt;0-&gt;21
+
+Floyd.js:166 8 -&gt; 0, weight:8790:8-&gt;4-&gt;21-&gt;0
+8 -&gt; 1, weight:93019:8-&gt;4-&gt;21-&gt;2-&gt;1
+8 -&gt; 2, weight:25020:8-&gt;4-&gt;21-&gt;2
+8 -&gt; 3, weight:1.7976931348623157e+308:8-&gt;3
+8 -&gt; 4, weight:218:8-&gt;4
+8 -&gt; 5, weight:78911:8-&gt;4-&gt;21-&gt;2-&gt;5
+8 -&gt; 6, weight:60275:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;12-&gt;6
+8 -&gt; 7, weight:51023:8-&gt;4-&gt;21-&gt;0-&gt;7
+8 -&gt; 8, weight:0:8-&gt;8
+8 -&gt; 9, weight:24625:8-&gt;4-&gt;21-&gt;0-&gt;9
+8 -&gt; 10, weight:8985:8-&gt;4-&gt;21-&gt;0-&gt;10
+8 -&gt; 11, weight:60492:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;11
+8 -&gt; 12, weight:26266:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;12
+8 -&gt; 13, weight:80462:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;13
+8 -&gt; 14, weight:28932:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;12-&gt;14
+8 -&gt; 15, weight:56297:8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;15
+8 -&gt; 16, weight:15441:8-&gt;16
+8 -&gt; 17, weight:42926:8-&gt;16-&gt;17
+8 -&gt; 18, weight:28830:8-&gt;16-&gt;18
+8 -&gt; 19, weight:179382:8-&gt;4-&gt;21-&gt;2-&gt;1-&gt;19
+8 -&gt; 20, weight:33907:8-&gt;4-&gt;21-&gt;0-&gt;20
+8 -&gt; 21, weight:7855:8-&gt;4-&gt;21
+
+Floyd.js:166 9 -&gt; 0, weight:15835:9-&gt;0
+9 -&gt; 1, weight:101934:9-&gt;0-&gt;21-&gt;2-&gt;1
+9 -&gt; 2, weight:33935:9-&gt;0-&gt;21-&gt;2
+9 -&gt; 3, weight:1.7976931348623157e+308:9-&gt;3
+9 -&gt; 4, weight:24407:9-&gt;0-&gt;21-&gt;4
+9 -&gt; 5, weight:87826:9-&gt;0-&gt;21-&gt;2-&gt;5
+9 -&gt; 6, weight:67320:9-&gt;0-&gt;10-&gt;12-&gt;6
+9 -&gt; 7, weight:58068:9-&gt;0-&gt;7
+9 -&gt; 8, weight:24625:9-&gt;0-&gt;21-&gt;4-&gt;8
+9 -&gt; 9, weight:0:9-&gt;9
+9 -&gt; 10, weight:16030:9-&gt;0-&gt;10
+9 -&gt; 11, weight:67537:9-&gt;0-&gt;10-&gt;11
+9 -&gt; 12, weight:33311:9-&gt;0-&gt;10-&gt;12
+9 -&gt; 13, weight:87507:9-&gt;0-&gt;10-&gt;13
+9 -&gt; 14, weight:35977:9-&gt;0-&gt;10-&gt;12-&gt;14
+9 -&gt; 15, weight:63342:9-&gt;0-&gt;10-&gt;15
+9 -&gt; 16, weight:40066:9-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16
+9 -&gt; 17, weight:67551:9-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+9 -&gt; 18, weight:47135:9-&gt;0-&gt;20-&gt;18
+9 -&gt; 19, weight:188297:9-&gt;0-&gt;21-&gt;2-&gt;1-&gt;19
+9 -&gt; 20, weight:40952:9-&gt;0-&gt;20
+9 -&gt; 21, weight:16770:9-&gt;0-&gt;21
+
+Floyd.js:166 10 -&gt; 0, weight:195:10-&gt;0
+10 -&gt; 1, weight:86294:10-&gt;0-&gt;21-&gt;2-&gt;1
+10 -&gt; 2, weight:18295:10-&gt;0-&gt;21-&gt;2
+10 -&gt; 3, weight:1.7976931348623157e+308:10-&gt;3
+10 -&gt; 4, weight:8767:10-&gt;0-&gt;21-&gt;4
+10 -&gt; 5, weight:72186:10-&gt;0-&gt;21-&gt;2-&gt;5
+10 -&gt; 6, weight:51290:10-&gt;12-&gt;6
+10 -&gt; 7, weight:42428:10-&gt;0-&gt;7
+10 -&gt; 8, weight:8985:10-&gt;0-&gt;21-&gt;4-&gt;8
+10 -&gt; 9, weight:16030:10-&gt;0-&gt;9
+10 -&gt; 10, weight:0:10-&gt;10
+10 -&gt; 11, weight:51507:10-&gt;11
+10 -&gt; 12, weight:17281:10-&gt;12
+10 -&gt; 13, weight:71477:10-&gt;13
+10 -&gt; 14, weight:19947:10-&gt;12-&gt;14
+10 -&gt; 15, weight:47312:10-&gt;15
+10 -&gt; 16, weight:24426:10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16
+10 -&gt; 17, weight:51911:10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+10 -&gt; 18, weight:31495:10-&gt;0-&gt;20-&gt;18
+10 -&gt; 19, weight:172657:10-&gt;0-&gt;21-&gt;2-&gt;1-&gt;19
+10 -&gt; 20, weight:25312:10-&gt;0-&gt;20
+10 -&gt; 21, weight:1130:10-&gt;0-&gt;21
+
+Floyd.js:166 11 -&gt; 0, weight:51702:11-&gt;10-&gt;0
+11 -&gt; 1, weight:133457:11-&gt;18-&gt;12-&gt;2-&gt;1
+11 -&gt; 2, weight:65458:11-&gt;18-&gt;12-&gt;2
+11 -&gt; 3, weight:1.7976931348623157e+308:11-&gt;3
+11 -&gt; 4, weight:60274:11-&gt;10-&gt;0-&gt;21-&gt;4
+11 -&gt; 5, weight:119349:11-&gt;18-&gt;12-&gt;2-&gt;5
+11 -&gt; 6, weight:75091:11-&gt;18-&gt;20-&gt;6
+11 -&gt; 7, weight:93935:11-&gt;10-&gt;0-&gt;7
+11 -&gt; 8, weight:60492:11-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+11 -&gt; 9, weight:67537:11-&gt;10-&gt;0-&gt;9
+11 -&gt; 10, weight:51507:11-&gt;10
+11 -&gt; 11, weight:0:11-&gt;11
+11 -&gt; 12, weight:56662:11-&gt;18-&gt;12
+11 -&gt; 13, weight:122984:11-&gt;10-&gt;13
+11 -&gt; 14, weight:59328:11-&gt;18-&gt;12-&gt;14
+11 -&gt; 15, weight:98819:11-&gt;10-&gt;15
+11 -&gt; 16, weight:55176:11-&gt;18-&gt;16
+11 -&gt; 17, weight:68372:11-&gt;17
+11 -&gt; 18, weight:41787:11-&gt;18
+11 -&gt; 19, weight:219820:11-&gt;18-&gt;12-&gt;2-&gt;1-&gt;19
+11 -&gt; 20, weight:47970:11-&gt;18-&gt;20
+11 -&gt; 21, weight:52637:11-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 12 -&gt; 0, weight:17476:12-&gt;10-&gt;0
+12 -&gt; 1, weight:76795:12-&gt;2-&gt;1
+12 -&gt; 2, weight:8796:12-&gt;2
+12 -&gt; 3, weight:1.7976931348623157e+308:12-&gt;3
+12 -&gt; 4, weight:26048:12-&gt;10-&gt;0-&gt;21-&gt;4
+12 -&gt; 5, weight:62687:12-&gt;2-&gt;5
+12 -&gt; 6, weight:34009:12-&gt;6
+12 -&gt; 7, weight:59709:12-&gt;10-&gt;0-&gt;7
+12 -&gt; 8, weight:26266:12-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+12 -&gt; 9, weight:33311:12-&gt;10-&gt;0-&gt;9
+12 -&gt; 10, weight:17281:12-&gt;10
+12 -&gt; 11, weight:56662:12-&gt;18-&gt;11
+12 -&gt; 12, weight:0:12-&gt;12
+12 -&gt; 13, weight:88758:12-&gt;10-&gt;13
+12 -&gt; 14, weight:2666:12-&gt;14
+12 -&gt; 15, weight:64593:12-&gt;10-&gt;15
+12 -&gt; 16, weight:28264:12-&gt;18-&gt;16
+12 -&gt; 17, weight:55749:12-&gt;18-&gt;16-&gt;17
+12 -&gt; 18, weight:14875:12-&gt;18
+12 -&gt; 19, weight:163158:12-&gt;2-&gt;1-&gt;19
+12 -&gt; 20, weight:21058:12-&gt;18-&gt;20
+12 -&gt; 21, weight:18411:12-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 13 -&gt; 0, weight:71672:13-&gt;10-&gt;0
+13 -&gt; 1, weight:157771:13-&gt;10-&gt;0-&gt;21-&gt;2-&gt;1
+13 -&gt; 2, weight:89772:13-&gt;10-&gt;0-&gt;21-&gt;2
+13 -&gt; 3, weight:1.7976931348623157e+308:13-&gt;3
+13 -&gt; 4, weight:80244:13-&gt;10-&gt;0-&gt;21-&gt;4
+13 -&gt; 5, weight:143663:13-&gt;10-&gt;0-&gt;21-&gt;2-&gt;5
+13 -&gt; 6, weight:122767:13-&gt;10-&gt;12-&gt;6
+13 -&gt; 7, weight:113905:13-&gt;10-&gt;0-&gt;7
+13 -&gt; 8, weight:80462:13-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+13 -&gt; 9, weight:87507:13-&gt;10-&gt;0-&gt;9
+13 -&gt; 10, weight:71477:13-&gt;10
+13 -&gt; 11, weight:122984:13-&gt;10-&gt;11
+13 -&gt; 12, weight:88758:13-&gt;10-&gt;12
+13 -&gt; 13, weight:0:13-&gt;13
+13 -&gt; 14, weight:91424:13-&gt;10-&gt;12-&gt;14
+13 -&gt; 15, weight:118789:13-&gt;10-&gt;15
+13 -&gt; 16, weight:95903:13-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16
+13 -&gt; 17, weight:123388:13-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+13 -&gt; 18, weight:102972:13-&gt;10-&gt;0-&gt;20-&gt;18
+13 -&gt; 19, weight:244134:13-&gt;10-&gt;0-&gt;21-&gt;2-&gt;1-&gt;19
+13 -&gt; 20, weight:96789:13-&gt;10-&gt;0-&gt;20
+13 -&gt; 21, weight:72607:13-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 14 -&gt; 0, weight:20142:14-&gt;12-&gt;10-&gt;0
+14 -&gt; 1, weight:79461:14-&gt;12-&gt;2-&gt;1
+14 -&gt; 2, weight:11462:14-&gt;12-&gt;2
+14 -&gt; 3, weight:1.7976931348623157e+308:14-&gt;3
+14 -&gt; 4, weight:28714:14-&gt;12-&gt;10-&gt;0-&gt;21-&gt;4
+14 -&gt; 5, weight:65353:14-&gt;12-&gt;2-&gt;5
+14 -&gt; 6, weight:31721:14-&gt;6
+14 -&gt; 7, weight:62375:14-&gt;12-&gt;10-&gt;0-&gt;7
+14 -&gt; 8, weight:28932:14-&gt;12-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+14 -&gt; 9, weight:35977:14-&gt;12-&gt;10-&gt;0-&gt;9
+14 -&gt; 10, weight:19947:14-&gt;12-&gt;10
+14 -&gt; 11, weight:59328:14-&gt;12-&gt;18-&gt;11
+14 -&gt; 12, weight:2666:14-&gt;12
+14 -&gt; 13, weight:91424:14-&gt;12-&gt;10-&gt;13
+14 -&gt; 14, weight:0:14-&gt;14
+14 -&gt; 15, weight:67259:14-&gt;12-&gt;10-&gt;15
+14 -&gt; 16, weight:30930:14-&gt;12-&gt;18-&gt;16
+14 -&gt; 17, weight:58415:14-&gt;12-&gt;18-&gt;16-&gt;17
+14 -&gt; 18, weight:17541:14-&gt;12-&gt;18
+14 -&gt; 19, weight:165824:14-&gt;12-&gt;2-&gt;1-&gt;19
+14 -&gt; 20, weight:23724:14-&gt;12-&gt;18-&gt;20
+14 -&gt; 21, weight:21077:14-&gt;12-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 15 -&gt; 0, weight:47507:15-&gt;10-&gt;0
+15 -&gt; 1, weight:133606:15-&gt;10-&gt;0-&gt;21-&gt;2-&gt;1
+15 -&gt; 2, weight:65607:15-&gt;10-&gt;0-&gt;21-&gt;2
+15 -&gt; 3, weight:1.7976931348623157e+308:15-&gt;3
+15 -&gt; 4, weight:56079:15-&gt;10-&gt;0-&gt;21-&gt;4
+15 -&gt; 5, weight:119498:15-&gt;10-&gt;0-&gt;21-&gt;2-&gt;5
+15 -&gt; 6, weight:98602:15-&gt;10-&gt;12-&gt;6
+15 -&gt; 7, weight:89740:15-&gt;10-&gt;0-&gt;7
+15 -&gt; 8, weight:56297:15-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8
+15 -&gt; 9, weight:63342:15-&gt;10-&gt;0-&gt;9
+15 -&gt; 10, weight:47312:15-&gt;10
+15 -&gt; 11, weight:98819:15-&gt;10-&gt;11
+15 -&gt; 12, weight:64593:15-&gt;10-&gt;12
+15 -&gt; 13, weight:118789:15-&gt;10-&gt;13
+15 -&gt; 14, weight:67259:15-&gt;10-&gt;12-&gt;14
+15 -&gt; 15, weight:0:15-&gt;15
+15 -&gt; 16, weight:71738:15-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16
+15 -&gt; 17, weight:99223:15-&gt;10-&gt;0-&gt;21-&gt;4-&gt;8-&gt;16-&gt;17
+15 -&gt; 18, weight:78807:15-&gt;10-&gt;0-&gt;20-&gt;18
+15 -&gt; 19, weight:219969:15-&gt;10-&gt;0-&gt;21-&gt;2-&gt;1-&gt;19
+15 -&gt; 20, weight:72624:15-&gt;10-&gt;0-&gt;20
+15 -&gt; 21, weight:48442:15-&gt;10-&gt;0-&gt;21
+
+Floyd.js:166 16 -&gt; 0, weight:24231:16-&gt;8-&gt;4-&gt;21-&gt;0
+16 -&gt; 1, weight:105059:16-&gt;18-&gt;12-&gt;2-&gt;1
+16 -&gt; 2, weight:37060:16-&gt;18-&gt;12-&gt;2
+16 -&gt; 3, weight:1.7976931348623157e+308:16-&gt;3
+16 -&gt; 4, weight:15659:16-&gt;8-&gt;4
+16 -&gt; 5, weight:90951:16-&gt;18-&gt;12-&gt;2-&gt;5
+16 -&gt; 6, weight:46693:16-&gt;18-&gt;20-&gt;6
+16 -&gt; 7, weight:66464:16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;7
+16 -&gt; 8, weight:15441:16-&gt;8
+16 -&gt; 9, weight:40066:16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;9
+16 -&gt; 10, weight:24426:16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10
+16 -&gt; 11, weight:55176:16-&gt;18-&gt;11
+16 -&gt; 12, weight:28264:16-&gt;18-&gt;12
+16 -&gt; 13, weight:95903:16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;13
+16 -&gt; 14, weight:30930:16-&gt;18-&gt;12-&gt;14
+16 -&gt; 15, weight:71738:16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;15
+16 -&gt; 16, weight:0:16-&gt;16
+16 -&gt; 17, weight:27485:16-&gt;17
+16 -&gt; 18, weight:13389:16-&gt;18
+16 -&gt; 19, weight:191422:16-&gt;18-&gt;12-&gt;2-&gt;1-&gt;19
+16 -&gt; 20, weight:19572:16-&gt;18-&gt;20
+16 -&gt; 21, weight:23296:16-&gt;8-&gt;4-&gt;21
+
+Floyd.js:166 17 -&gt; 0, weight:51716:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0
+17 -&gt; 1, weight:132544:17-&gt;16-&gt;18-&gt;12-&gt;2-&gt;1
+17 -&gt; 2, weight:64545:17-&gt;16-&gt;18-&gt;12-&gt;2
+17 -&gt; 3, weight:1.7976931348623157e+308:17-&gt;3
+17 -&gt; 4, weight:43144:17-&gt;16-&gt;8-&gt;4
+17 -&gt; 5, weight:118436:17-&gt;16-&gt;18-&gt;12-&gt;2-&gt;5
+17 -&gt; 6, weight:74178:17-&gt;16-&gt;18-&gt;20-&gt;6
+17 -&gt; 7, weight:93949:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;7
+17 -&gt; 8, weight:42926:17-&gt;16-&gt;8
+17 -&gt; 9, weight:67551:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;9
+17 -&gt; 10, weight:51911:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10
+17 -&gt; 11, weight:68372:17-&gt;11
+17 -&gt; 12, weight:55749:17-&gt;16-&gt;18-&gt;12
+17 -&gt; 13, weight:123388:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;13
+17 -&gt; 14, weight:58415:17-&gt;16-&gt;18-&gt;12-&gt;14
+17 -&gt; 15, weight:99223:17-&gt;16-&gt;8-&gt;4-&gt;21-&gt;0-&gt;10-&gt;15
+17 -&gt; 16, weight:27485:17-&gt;16
+17 -&gt; 17, weight:0:17-&gt;17
+17 -&gt; 18, weight:40874:17-&gt;16-&gt;18
+17 -&gt; 19, weight:218907:17-&gt;16-&gt;18-&gt;12-&gt;2-&gt;1-&gt;19
+17 -&gt; 20, weight:47057:17-&gt;16-&gt;18-&gt;20
+17 -&gt; 21, weight:50781:17-&gt;16-&gt;8-&gt;4-&gt;21
+
+Floyd.js:166 18 -&gt; 0, weight:31300:18-&gt;20-&gt;0
+18 -&gt; 1, weight:91670:18-&gt;12-&gt;2-&gt;1
+18 -&gt; 2, weight:23671:18-&gt;12-&gt;2
+18 -&gt; 3, weight:1.7976931348623157e+308:18-&gt;3
+18 -&gt; 4, weight:29048:18-&gt;16-&gt;8-&gt;4
+18 -&gt; 5, weight:77562:18-&gt;12-&gt;2-&gt;5
+18 -&gt; 6, weight:33304:18-&gt;20-&gt;6
+18 -&gt; 7, weight:73533:18-&gt;20-&gt;0-&gt;7
+18 -&gt; 8, weight:28830:18-&gt;16-&gt;8
+18 -&gt; 9, weight:47135:18-&gt;20-&gt;0-&gt;9
+18 -&gt; 10, weight:31495:18-&gt;20-&gt;0-&gt;10
+18 -&gt; 11, weight:41787:18-&gt;11
+18 -&gt; 12, weight:14875:18-&gt;12
+18 -&gt; 13, weight:102972:18-&gt;20-&gt;0-&gt;10-&gt;13
+18 -&gt; 14, weight:17541:18-&gt;12-&gt;14
+18 -&gt; 15, weight:78807:18-&gt;20-&gt;0-&gt;10-&gt;15
+18 -&gt; 16, weight:13389:18-&gt;16
+18 -&gt; 17, weight:40874:18-&gt;16-&gt;17
+18 -&gt; 18, weight:0:18-&gt;18
+18 -&gt; 19, weight:178033:18-&gt;12-&gt;2-&gt;1-&gt;19
+18 -&gt; 20, weight:6183:18-&gt;20
+18 -&gt; 21, weight:32235:18-&gt;20-&gt;0-&gt;21
+
+Floyd.js:166 19 -&gt; 0, weight:172462:19-&gt;1-&gt;2-&gt;21-&gt;0
+19 -&gt; 1, weight:86363:19-&gt;1
+19 -&gt; 2, weight:154362:19-&gt;1-&gt;2
+19 -&gt; 3, weight:1.7976931348623157e+308:19-&gt;3
+19 -&gt; 4, weight:179164:19-&gt;1-&gt;2-&gt;21-&gt;4
+19 -&gt; 5, weight:208253:19-&gt;1-&gt;2-&gt;5
+19 -&gt; 6, weight:197167:19-&gt;1-&gt;2-&gt;12-&gt;6
+19 -&gt; 7, weight:214695:19-&gt;1-&gt;2-&gt;21-&gt;0-&gt;7
+19 -&gt; 8, weight:179382:19-&gt;1-&gt;2-&gt;21-&gt;4-&gt;8
+19 -&gt; 9, weight:188297:19-&gt;1-&gt;2-&gt;21-&gt;0-&gt;9
+19 -&gt; 10, weight:172657:19-&gt;1-&gt;2-&gt;21-&gt;0-&gt;10
+19 -&gt; 11, weight:219820:19-&gt;1-&gt;2-&gt;12-&gt;18-&gt;11
+19 -&gt; 12, weight:163158:19-&gt;1-&gt;2-&gt;12
+19 -&gt; 13, weight:244134:19-&gt;1-&gt;2-&gt;21-&gt;0-&gt;10-&gt;13
+19 -&gt; 14, weight:165824:19-&gt;1-&gt;2-&gt;12-&gt;14
+19 -&gt; 15, weight:219969:19-&gt;1-&gt;2-&gt;21-&gt;0-&gt;10-&gt;15
+19 -&gt; 16, weight:191422:19-&gt;1-&gt;2-&gt;12-&gt;18-&gt;16
+19 -&gt; 17, weight:218907:19-&gt;1-&gt;2-&gt;12-&gt;18-&gt;16-&gt;17
+19 -&gt; 18, weight:178033:19-&gt;1-&gt;2-&gt;12-&gt;18
+19 -&gt; 19, weight:0:19-&gt;19
+19 -&gt; 20, weight:184216:19-&gt;1-&gt;2-&gt;12-&gt;18-&gt;20
+19 -&gt; 21, weight:171527:19-&gt;1-&gt;2-&gt;21
+
+Floyd.js:166 20 -&gt; 0, weight:25117:20-&gt;0
+20 -&gt; 1, weight:97853:20-&gt;18-&gt;12-&gt;2-&gt;1
+20 -&gt; 2, weight:29854:20-&gt;18-&gt;12-&gt;2
+20 -&gt; 3, weight:1.7976931348623157e+308:20-&gt;3
+20 -&gt; 4, weight:33689:20-&gt;0-&gt;21-&gt;4
+20 -&gt; 5, weight:73634:20-&gt;6-&gt;5
+20 -&gt; 6, weight:27121:20-&gt;6
+20 -&gt; 7, weight:67350:20-&gt;0-&gt;7
+20 -&gt; 8, weight:33907:20-&gt;0-&gt;21-&gt;4-&gt;8
+20 -&gt; 9, weight:40952:20-&gt;0-&gt;9
+20 -&gt; 10, weight:25312:20-&gt;0-&gt;10
+20 -&gt; 11, weight:47970:20-&gt;18-&gt;11
+20 -&gt; 12, weight:21058:20-&gt;18-&gt;12
+20 -&gt; 13, weight:96789:20-&gt;0-&gt;10-&gt;13
+20 -&gt; 14, weight:23724:20-&gt;18-&gt;12-&gt;14
+20 -&gt; 15, weight:72624:20-&gt;0-&gt;10-&gt;15
+20 -&gt; 16, weight:19572:20-&gt;18-&gt;16
+20 -&gt; 17, weight:47057:20-&gt;18-&gt;16-&gt;17
+20 -&gt; 18, weight:6183:20-&gt;18
+20 -&gt; 19, weight:184216:20-&gt;18-&gt;12-&gt;2-&gt;1-&gt;19
+20 -&gt; 20, weight:0:20-&gt;20
+20 -&gt; 21, weight:26052:20-&gt;0-&gt;21
+
+Floyd.js:166 21 -&gt; 0, weight:935:21-&gt;0
+21 -&gt; 1, weight:85164:21-&gt;2-&gt;1
+21 -&gt; 2, weight:17165:21-&gt;2
+21 -&gt; 3, weight:1.7976931348623157e+308:21-&gt;3
+21 -&gt; 4, weight:7637:21-&gt;4
+21 -&gt; 5, weight:71056:21-&gt;2-&gt;5
+21 -&gt; 6, weight:52420:21-&gt;0-&gt;10-&gt;12-&gt;6
+21 -&gt; 7, weight:43168:21-&gt;0-&gt;7
+21 -&gt; 8, weight:7855:21-&gt;4-&gt;8
+21 -&gt; 9, weight:16770:21-&gt;0-&gt;9
+21 -&gt; 10, weight:1130:21-&gt;0-&gt;10
+21 -&gt; 11, weight:52637:21-&gt;0-&gt;10-&gt;11
+21 -&gt; 12, weight:18411:21-&gt;0-&gt;10-&gt;12
+21 -&gt; 13, weight:72607:21-&gt;0-&gt;10-&gt;13
+21 -&gt; 14, weight:21077:21-&gt;0-&gt;10-&gt;12-&gt;14
+21 -&gt; 15, weight:48442:21-&gt;0-&gt;10-&gt;15
+21 -&gt; 16, weight:23296:21-&gt;4-&gt;8-&gt;16
+21 -&gt; 17, weight:50781:21-&gt;4-&gt;8-&gt;16-&gt;17
+21 -&gt; 18, weight:32235:21-&gt;0-&gt;20-&gt;18
+21 -&gt; 19, weight:171527:21-&gt;2-&gt;1-&gt;19
+21 -&gt; 20, weight:26052:21-&gt;0-&gt;20
+21 -&gt; 21, weight:0:21-&gt;21
+
+GameMain.js:69 The minimum risk value is: 935
+
+</pre>
+
+<h3 id="测试数据2">测试数据2</h3>
+
+<pre class="brush: js; ">
+
+
+
+testData_2()
+{
+    
+    let x: number[];
+    let y: number[];
+    let w: number[];
+    let n: number;
+    let m: number;
+
+    n = 15;
+    m = 119;
+    x = [0,0,3,0,1,5,5,0,11,0,1,5,12,2,12,3,14,9,4,1,2,10,0,6,10,2,2,8,9,13,4,14,13,7,0,9,8,0,2,0,13,12,11,5,14,14,0,3,10,5,4,12,12,1,14,10,10,12,5,6,15,11,2,1,3,9,11,12,10,14,6,10,12,1,4,1,8,10,3,9,13,4,10,6,4,6,3,13,7,9,13,3,4,7,7,15,2,6,6,1,15,15,2,3,6,14,9,11,2,5,15,2,7,15,3,1,5,1,13]
+    y = [15,7,8,11,0,0,4,10,2,9,4,14,4,12,8,1,8,2,8,5,0,4,8,11,13,4,8,10,7,14,6,6,6,8,13,13,5,12,14,14,8,7,14,10,12,15,6,0,2,12,0,11,10,8,7,1,11,15,11,8,5,13,13,14,11,12,7,3,7,10,12,3,13,15,11,11,9,6,5,6,15,9,15,15,14,3,15,7,4,10,5,4,13,1,3,8,3,5,1,12,4,9,15,14,7,9,5,8,6,7,11,1,2,7,9,9,2,13,3]
+    w = [98737,25594,93437,6242,4021,85593,49106,80313,86433,7439,63281,66498,11065,55961,40850,36571,53394,48551,75802,45577,50801,16246,99905,12301,95430,46641,15151,66858,26256,61817,26241,53249,36038,17433,15939,39647,3031,71721,71546,40145,16385,42928,74959,29414,38973,10676,72912,82047,22241,87633,99101,23241,42017,79035,23283,37164,57041,66185,47929,88161,55180,63622,52383,94641,81217,83186,58081,57311,55057,68722,84161,29662,96779,86373,71657,65761,78376,52239,6321,11433,27204,74425,99619,71926,91136,90313,26470,64601,61665,62077,75091,33121,69401,49817,47741,90683,8929,78939,52716,52917,96033,40497,65485,75320,1461,19905,37603,4353,39366,70546,30517,72611,71431,86347,57675,86309,71521,73945,67151]
+
+    let floyd = new Floyd();
+    floyd.calculation(n, m, x, y, w);
+    console.log("The minimum risk value is: %d", floyd.getPathMaxArc(0, floyd.nodeNum - 1));
+
+}
+</pre>
+
+<h2 id="日志-2">日志</h2>
+
+<pre>
+Floyd.js:151 pathMap:
+Floyd.js:166 0 -&gt; 0, weight:0:0-&gt;0
+0 -&gt; 1, weight:4021:0-&gt;1
+0 -&gt; 2, weight:25746:0-&gt;11-&gt;8-&gt;2
+0 -&gt; 3, weight:19947:0-&gt;11-&gt;8-&gt;5-&gt;3
+0 -&gt; 4, weight:40548:0-&gt;11-&gt;12-&gt;4
+0 -&gt; 5, weight:13626:0-&gt;11-&gt;8-&gt;5
+0 -&gt; 6, weight:18543:0-&gt;11-&gt;6
+0 -&gt; 7, weight:20004:0-&gt;11-&gt;6-&gt;7
+0 -&gt; 8, weight:10595:0-&gt;11-&gt;8
+0 -&gt; 9, weight:7439:0-&gt;9
+0 -&gt; 10, weight:41185:0-&gt;1-&gt;10
+0 -&gt; 11, weight:6242:0-&gt;11
+0 -&gt; 12, weight:29483:0-&gt;11-&gt;12
+0 -&gt; 13, weight:15939:0-&gt;13
+0 -&gt; 14, weight:27344:0-&gt;9-&gt;14
+0 -&gt; 15, weight:36759:0-&gt;11-&gt;15
+
+Floyd.js:166 1 -&gt; 0, weight:4021:1-&gt;0
+1 -&gt; 1, weight:0:1-&gt;1
+1 -&gt; 2, weight:29767:1-&gt;0-&gt;11-&gt;8-&gt;2
+1 -&gt; 3, weight:23968:1-&gt;0-&gt;11-&gt;8-&gt;5-&gt;3
+1 -&gt; 4, weight:44569:1-&gt;0-&gt;11-&gt;12-&gt;4
+1 -&gt; 5, weight:17647:1-&gt;0-&gt;11-&gt;8-&gt;5
+1 -&gt; 6, weight:22564:1-&gt;0-&gt;11-&gt;6
+1 -&gt; 7, weight:24025:1-&gt;0-&gt;11-&gt;6-&gt;7
+1 -&gt; 8, weight:14616:1-&gt;0-&gt;11-&gt;8
+1 -&gt; 9, weight:11460:1-&gt;0-&gt;9
+1 -&gt; 10, weight:37164:1-&gt;10
+1 -&gt; 11, weight:10263:1-&gt;0-&gt;11
+1 -&gt; 12, weight:33504:1-&gt;0-&gt;11-&gt;12
+1 -&gt; 13, weight:19960:1-&gt;0-&gt;13
+1 -&gt; 14, weight:31365:1-&gt;0-&gt;9-&gt;14
+1 -&gt; 15, weight:40780:1-&gt;0-&gt;11-&gt;15
+
+Floyd.js:166 2 -&gt; 0, weight:25746:2-&gt;8-&gt;11-&gt;0
+2 -&gt; 1, weight:29767:2-&gt;8-&gt;11-&gt;0-&gt;1
+2 -&gt; 2, weight:0:2-&gt;2
+2 -&gt; 3, weight:8929:2-&gt;3
+2 -&gt; 4, weight:38487:2-&gt;10-&gt;4
+2 -&gt; 5, weight:15250:2-&gt;3-&gt;5
+2 -&gt; 6, weight:31805:2-&gt;8-&gt;11-&gt;6
+2 -&gt; 7, weight:32584:2-&gt;8-&gt;7
+2 -&gt; 8, weight:15151:2-&gt;8
+2 -&gt; 9, weight:33185:2-&gt;8-&gt;11-&gt;0-&gt;9
+2 -&gt; 10, weight:22241:2-&gt;10
+2 -&gt; 11, weight:19504:2-&gt;8-&gt;11
+2 -&gt; 12, weight:42745:2-&gt;8-&gt;11-&gt;12
+2 -&gt; 13, weight:31536:2-&gt;8-&gt;13
+2 -&gt; 14, weight:46075:2-&gt;3-&gt;15-&gt;14
+2 -&gt; 15, weight:35399:2-&gt;3-&gt;15
+
+Floyd.js:166 3 -&gt; 0, weight:19947:3-&gt;5-&gt;8-&gt;11-&gt;0
+3 -&gt; 1, weight:23968:3-&gt;5-&gt;8-&gt;11-&gt;0-&gt;1
+3 -&gt; 2, weight:8929:3-&gt;2
+3 -&gt; 3, weight:0:3-&gt;3
+3 -&gt; 4, weight:33121:3-&gt;4
+3 -&gt; 5, weight:6321:3-&gt;5
+3 -&gt; 6, weight:26006:3-&gt;5-&gt;8-&gt;11-&gt;6
+3 -&gt; 7, weight:26785:3-&gt;5-&gt;8-&gt;7
+3 -&gt; 8, weight:9352:3-&gt;5-&gt;8
+3 -&gt; 9, weight:27386:3-&gt;5-&gt;8-&gt;11-&gt;0-&gt;9
+3 -&gt; 10, weight:29662:3-&gt;10
+3 -&gt; 11, weight:13705:3-&gt;5-&gt;8-&gt;11
+3 -&gt; 12, weight:36946:3-&gt;5-&gt;8-&gt;11-&gt;12
+3 -&gt; 13, weight:25737:3-&gt;5-&gt;8-&gt;13
+3 -&gt; 14, weight:37146:3-&gt;15-&gt;14
+3 -&gt; 15, weight:26470:3-&gt;15
+
+Floyd.js:166 4 -&gt; 0, weight:40548:4-&gt;12-&gt;11-&gt;0
+4 -&gt; 1, weight:44569:4-&gt;12-&gt;11-&gt;0-&gt;1
+4 -&gt; 2, weight:38487:4-&gt;10-&gt;2
+4 -&gt; 3, weight:33121:4-&gt;3
+4 -&gt; 4, weight:0:4-&gt;4
+4 -&gt; 5, weight:39442:4-&gt;3-&gt;5
+4 -&gt; 6, weight:26241:4-&gt;6
+4 -&gt; 7, weight:27702:4-&gt;6-&gt;7
+4 -&gt; 8, weight:38659:4-&gt;12-&gt;11-&gt;8
+4 -&gt; 9, weight:37674:4-&gt;6-&gt;9
+4 -&gt; 10, weight:16246:4-&gt;10
+4 -&gt; 11, weight:34306:4-&gt;12-&gt;11
+4 -&gt; 12, weight:11065:4-&gt;12
+4 -&gt; 13, weight:55044:4-&gt;12-&gt;11-&gt;8-&gt;13
+4 -&gt; 14, weight:50038:4-&gt;12-&gt;14
+4 -&gt; 15, weight:59591:4-&gt;3-&gt;15
+
+Floyd.js:166 5 -&gt; 0, weight:13626:5-&gt;8-&gt;11-&gt;0
+5 -&gt; 1, weight:17647:5-&gt;8-&gt;11-&gt;0-&gt;1
+5 -&gt; 2, weight:15250:5-&gt;3-&gt;2
+5 -&gt; 3, weight:6321:5-&gt;3
+5 -&gt; 4, weight:39442:5-&gt;3-&gt;4
+5 -&gt; 5, weight:0:5-&gt;5
+5 -&gt; 6, weight:19685:5-&gt;8-&gt;11-&gt;6
+5 -&gt; 7, weight:20464:5-&gt;8-&gt;7
+5 -&gt; 8, weight:3031:5-&gt;8
+5 -&gt; 9, weight:21065:5-&gt;8-&gt;11-&gt;0-&gt;9
+5 -&gt; 10, weight:29414:5-&gt;10
+5 -&gt; 11, weight:7384:5-&gt;8-&gt;11
+5 -&gt; 12, weight:30625:5-&gt;8-&gt;11-&gt;12
+5 -&gt; 13, weight:19416:5-&gt;8-&gt;13
+5 -&gt; 14, weight:40970:5-&gt;8-&gt;11-&gt;0-&gt;9-&gt;14
+5 -&gt; 15, weight:32791:5-&gt;3-&gt;15
+
+Floyd.js:166 6 -&gt; 0, weight:18543:6-&gt;11-&gt;0
+6 -&gt; 1, weight:22564:6-&gt;11-&gt;0-&gt;1
+6 -&gt; 2, weight:31805:6-&gt;11-&gt;8-&gt;2
+6 -&gt; 3, weight:26006:6-&gt;11-&gt;8-&gt;5-&gt;3
+6 -&gt; 4, weight:26241:6-&gt;4
+6 -&gt; 5, weight:19685:6-&gt;11-&gt;8-&gt;5
+6 -&gt; 6, weight:0:6-&gt;6
+6 -&gt; 7, weight:1461:6-&gt;7
+6 -&gt; 8, weight:16654:6-&gt;11-&gt;8
+6 -&gt; 9, weight:11433:6-&gt;9
+6 -&gt; 10, weight:42487:6-&gt;4-&gt;10
+6 -&gt; 11, weight:12301:6-&gt;11
+6 -&gt; 12, weight:35542:6-&gt;11-&gt;12
+6 -&gt; 13, weight:33039:6-&gt;11-&gt;8-&gt;13
+6 -&gt; 14, weight:24744:6-&gt;7-&gt;14
+6 -&gt; 15, weight:35420:6-&gt;7-&gt;14-&gt;15
+
+Floyd.js:166 7 -&gt; 0, weight:20004:7-&gt;6-&gt;11-&gt;0
+7 -&gt; 1, weight:24025:7-&gt;6-&gt;11-&gt;0-&gt;1
+7 -&gt; 2, weight:32584:7-&gt;8-&gt;2
+7 -&gt; 3, weight:26785:7-&gt;8-&gt;5-&gt;3
+7 -&gt; 4, weight:27702:7-&gt;6-&gt;4
+7 -&gt; 5, weight:20464:7-&gt;8-&gt;5
+7 -&gt; 6, weight:1461:7-&gt;6
+7 -&gt; 7, weight:0:7-&gt;7
+7 -&gt; 8, weight:17433:7-&gt;8
+7 -&gt; 9, weight:12894:7-&gt;6-&gt;9
+7 -&gt; 10, weight:43948:7-&gt;6-&gt;4-&gt;10
+7 -&gt; 11, weight:13762:7-&gt;6-&gt;11
+7 -&gt; 12, weight:37003:7-&gt;6-&gt;11-&gt;12
+7 -&gt; 13, weight:33818:7-&gt;8-&gt;13
+7 -&gt; 14, weight:23283:7-&gt;14
+7 -&gt; 15, weight:33959:7-&gt;14-&gt;15
+
+Floyd.js:166 8 -&gt; 0, weight:10595:8-&gt;11-&gt;0
+8 -&gt; 1, weight:14616:8-&gt;11-&gt;0-&gt;1
+8 -&gt; 2, weight:15151:8-&gt;2
+8 -&gt; 3, weight:9352:8-&gt;5-&gt;3
+8 -&gt; 4, weight:38659:8-&gt;11-&gt;12-&gt;4
+8 -&gt; 5, weight:3031:8-&gt;5
+8 -&gt; 6, weight:16654:8-&gt;11-&gt;6
+8 -&gt; 7, weight:17433:8-&gt;7
+8 -&gt; 8, weight:0:8-&gt;8
+8 -&gt; 9, weight:18034:8-&gt;11-&gt;0-&gt;9
+8 -&gt; 10, weight:32445:8-&gt;5-&gt;10
+8 -&gt; 11, weight:4353:8-&gt;11
+8 -&gt; 12, weight:27594:8-&gt;11-&gt;12
+8 -&gt; 13, weight:16385:8-&gt;13
+8 -&gt; 14, weight:37939:8-&gt;11-&gt;0-&gt;9-&gt;14
+8 -&gt; 15, weight:34870:8-&gt;11-&gt;15
+
+Floyd.js:166 9 -&gt; 0, weight:7439:9-&gt;0
+9 -&gt; 1, weight:11460:9-&gt;0-&gt;1
+9 -&gt; 2, weight:33185:9-&gt;0-&gt;11-&gt;8-&gt;2
+9 -&gt; 3, weight:27386:9-&gt;0-&gt;11-&gt;8-&gt;5-&gt;3
+9 -&gt; 4, weight:37674:9-&gt;6-&gt;4
+9 -&gt; 5, weight:21065:9-&gt;0-&gt;11-&gt;8-&gt;5
+9 -&gt; 6, weight:11433:9-&gt;6
+9 -&gt; 7, weight:12894:9-&gt;6-&gt;7
+9 -&gt; 8, weight:18034:9-&gt;0-&gt;11-&gt;8
+9 -&gt; 9, weight:0:9-&gt;9
+9 -&gt; 10, weight:48624:9-&gt;0-&gt;1-&gt;10
+9 -&gt; 11, weight:13681:9-&gt;0-&gt;11
+9 -&gt; 12, weight:36922:9-&gt;0-&gt;11-&gt;12
+9 -&gt; 13, weight:23378:9-&gt;0-&gt;13
+9 -&gt; 14, weight:19905:9-&gt;14
+9 -&gt; 15, weight:30581:9-&gt;14-&gt;15
+
+Floyd.js:166 10 -&gt; 0, weight:41185:10-&gt;1-&gt;0
+10 -&gt; 1, weight:37164:10-&gt;1
+10 -&gt; 2, weight:22241:10-&gt;2
+10 -&gt; 3, weight:29662:10-&gt;3
+10 -&gt; 4, weight:16246:10-&gt;4
+10 -&gt; 5, weight:29414:10-&gt;5
+10 -&gt; 6, weight:42487:10-&gt;4-&gt;6
+10 -&gt; 7, weight:43948:10-&gt;4-&gt;6-&gt;7
+10 -&gt; 8, weight:32445:10-&gt;5-&gt;8
+10 -&gt; 9, weight:48624:10-&gt;1-&gt;0-&gt;9
+10 -&gt; 10, weight:0:10-&gt;10
+10 -&gt; 11, weight:36798:10-&gt;5-&gt;8-&gt;11
+10 -&gt; 12, weight:27311:10-&gt;4-&gt;12
+10 -&gt; 13, weight:48830:10-&gt;5-&gt;8-&gt;13
+10 -&gt; 14, weight:66284:10-&gt;4-&gt;12-&gt;14
+10 -&gt; 15, weight:56132:10-&gt;3-&gt;15
+
+Floyd.js:166 11 -&gt; 0, weight:6242:11-&gt;0
+11 -&gt; 1, weight:10263:11-&gt;0-&gt;1
+11 -&gt; 2, weight:19504:11-&gt;8-&gt;2
+11 -&gt; 3, weight:13705:11-&gt;8-&gt;5-&gt;3
+11 -&gt; 4, weight:34306:11-&gt;12-&gt;4
+11 -&gt; 5, weight:7384:11-&gt;8-&gt;5
+11 -&gt; 6, weight:12301:11-&gt;6
+11 -&gt; 7, weight:13762:11-&gt;6-&gt;7
+11 -&gt; 8, weight:4353:11-&gt;8
+11 -&gt; 9, weight:13681:11-&gt;0-&gt;9
+11 -&gt; 10, weight:36798:11-&gt;8-&gt;5-&gt;10
+11 -&gt; 11, weight:0:11-&gt;11
+11 -&gt; 12, weight:23241:11-&gt;12
+11 -&gt; 13, weight:20738:11-&gt;8-&gt;13
+11 -&gt; 14, weight:33586:11-&gt;0-&gt;9-&gt;14
+11 -&gt; 15, weight:30517:11-&gt;15
+
+Floyd.js:166 12 -&gt; 0, weight:29483:12-&gt;11-&gt;0
+12 -&gt; 1, weight:33504:12-&gt;11-&gt;0-&gt;1
+12 -&gt; 2, weight:42745:12-&gt;11-&gt;8-&gt;2
+12 -&gt; 3, weight:36946:12-&gt;11-&gt;8-&gt;5-&gt;3
+12 -&gt; 4, weight:11065:12-&gt;4
+12 -&gt; 5, weight:30625:12-&gt;11-&gt;8-&gt;5
+12 -&gt; 6, weight:35542:12-&gt;11-&gt;6
+12 -&gt; 7, weight:37003:12-&gt;11-&gt;6-&gt;7
+12 -&gt; 8, weight:27594:12-&gt;11-&gt;8
+12 -&gt; 9, weight:36922:12-&gt;11-&gt;0-&gt;9
+12 -&gt; 10, weight:27311:12-&gt;4-&gt;10
+12 -&gt; 11, weight:23241:12-&gt;11
+12 -&gt; 12, weight:0:12-&gt;12
+12 -&gt; 13, weight:43979:12-&gt;11-&gt;8-&gt;13
+12 -&gt; 14, weight:38973:12-&gt;14
+12 -&gt; 15, weight:49649:12-&gt;14-&gt;15
+
+Floyd.js:166 13 -&gt; 0, weight:15939:13-&gt;0
+13 -&gt; 1, weight:19960:13-&gt;0-&gt;1
+13 -&gt; 2, weight:31536:13-&gt;8-&gt;2
+13 -&gt; 3, weight:25737:13-&gt;8-&gt;5-&gt;3
+13 -&gt; 4, weight:55044:13-&gt;8-&gt;11-&gt;12-&gt;4
+13 -&gt; 5, weight:19416:13-&gt;8-&gt;5
+13 -&gt; 6, weight:33039:13-&gt;8-&gt;11-&gt;6
+13 -&gt; 7, weight:33818:13-&gt;8-&gt;7
+13 -&gt; 8, weight:16385:13-&gt;8
+13 -&gt; 9, weight:23378:13-&gt;0-&gt;9
+13 -&gt; 10, weight:48830:13-&gt;8-&gt;5-&gt;10
+13 -&gt; 11, weight:20738:13-&gt;8-&gt;11
+13 -&gt; 12, weight:43979:13-&gt;8-&gt;11-&gt;12
+13 -&gt; 13, weight:0:13-&gt;13
+13 -&gt; 14, weight:37880:13-&gt;15-&gt;14
+13 -&gt; 15, weight:27204:13-&gt;15
+
+Floyd.js:166 14 -&gt; 0, weight:27344:14-&gt;9-&gt;0
+14 -&gt; 1, weight:31365:14-&gt;9-&gt;0-&gt;1
+14 -&gt; 2, weight:46075:14-&gt;15-&gt;3-&gt;2
+14 -&gt; 3, weight:37146:14-&gt;15-&gt;3
+14 -&gt; 4, weight:50038:14-&gt;12-&gt;4
+14 -&gt; 5, weight:40970:14-&gt;9-&gt;0-&gt;11-&gt;8-&gt;5
+14 -&gt; 6, weight:24744:14-&gt;7-&gt;6
+14 -&gt; 7, weight:23283:14-&gt;7
+14 -&gt; 8, weight:37939:14-&gt;9-&gt;0-&gt;11-&gt;8
+14 -&gt; 9, weight:19905:14-&gt;9
+14 -&gt; 10, weight:66284:14-&gt;12-&gt;4-&gt;10
+14 -&gt; 11, weight:33586:14-&gt;9-&gt;0-&gt;11
+14 -&gt; 12, weight:38973:14-&gt;12
+14 -&gt; 13, weight:37880:14-&gt;15-&gt;13
+14 -&gt; 14, weight:0:14-&gt;14
+14 -&gt; 15, weight:10676:14-&gt;15
+
+Floyd.js:166 15 -&gt; 0, weight:36759:15-&gt;11-&gt;0
+15 -&gt; 1, weight:40780:15-&gt;11-&gt;0-&gt;1
+15 -&gt; 2, weight:35399:15-&gt;3-&gt;2
+15 -&gt; 3, weight:26470:15-&gt;3
+15 -&gt; 4, weight:59591:15-&gt;3-&gt;4
+15 -&gt; 5, weight:32791:15-&gt;3-&gt;5
+15 -&gt; 6, weight:35420:15-&gt;14-&gt;7-&gt;6
+15 -&gt; 7, weight:33959:15-&gt;14-&gt;7
+15 -&gt; 8, weight:34870:15-&gt;11-&gt;8
+15 -&gt; 9, weight:30581:15-&gt;14-&gt;9
+15 -&gt; 10, weight:56132:15-&gt;3-&gt;10
+15 -&gt; 11, weight:30517:15-&gt;11
+15 -&gt; 12, weight:49649:15-&gt;14-&gt;12
+15 -&gt; 13, weight:27204:15-&gt;13
+15 -&gt; 14, weight:10676:15-&gt;14
+15 -&gt; 15, weight:0:15-&gt;15
+
+GameMain.js:85 The minimum risk value is: 30517
+
+
+</pre>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/unity_shader_note_010_RenderSteup-szgdgx/#content" class="pageNav"  >上一篇: Unity Shader 学习笔记（010）RenderSteup渲染设置之固定着色器命令</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/Prim/#content" class="pageNav"  >下一篇: 最小生成树之Prim普里姆算法</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "20181018160000",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+

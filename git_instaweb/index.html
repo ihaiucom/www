@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>git网页查看资源 git instaweb --httpd=webrick --port=8080</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>git网页查看资源 git instaweb --httpd=webrick --port=8080</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2016-12-14">2016-12-14</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#git" title="git">git</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#git" title="git">git</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<h2 class="nav1">使用</h2>
+<p>cd到git项目，不管是服务器的还是客户端的。输入以下命令就可以通过web服务求查看了。</p>
+<pre>
+git instaweb --httpd=webrick --port=8080
+</pre>
+<p></p>
+<p style="border: 1px solid;"><img src="/assets/docpic/gitweb_1.png" /></p>
+<p></p>
+
+<p>默认hb的值是编码过的。我们可以直接用版本路径明文</p>
+<p style="border: 1px solid;"><img src="/assets/docpic/gitweb_4.png" /></p>
+<p></p>
+<p>使用明码路径</p>
+<p style="border: 1px solid;"><img src="/assets/docpic/gitweb_5.png" /></p>
+<p></p>
+
+<p>我们可以通过不同的tag访问不同的版本</p>
+<p style="border: 1px solid;"><img src="/assets/docpic/gitweb_2.jpg" /></p>
+<p style="border: 1px solid;"><img src="/assets/docpic/gitweb_3.jpg" /></p>
+<p></p>
+
+<h2 class="nav1">停止服务器</h2>
+<pre>
+git instaweb --httpd=webrick --stop
+</pre>
+<p>或者用ps 查找进程然后kill</p>
+<pre>
+ps -ef | grep git
+kill -9 进程号
+</pre>
+
+<h2 class="nav1">其他作用</h2>
+<p>游戏往往需要更新资源，用这个来管理最好不过。同过tag来控制版本号、发行商。</p>
+<p>好处1:这样可以做到一份资源管理所有版本。省去了每个发行商或者版本都需要独立一个目录(特殊情况除外)。</p>
+<p>好处2:可以完全有客户端控制git。不再需要通过ssh等去控制服务器</p>
+<p>好处3:自动解决了，上传版本过程中影响更新上一版本的玩家</p>
+<p></p>
+<p></p>
+
+<h2 class="nav1">相关文档</h2>
+<p><a target="_blank" href="https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-GitWeb">4.6 服务器上的 Git - GitWeb</a></p>
+<p><a target="_blank" href="https://git-scm.com/book/en/v2/Git-on-the-Server-GitWeb">https://git-scm.com/book/en/v2/Git-on-the-Server-GitWeb</a></p>
+<p><a target="_blank" href="https://git-scm.com/docs/gitweb">https://git-scm.com/docs/gitweb</a></p>
+<p></p>
+<p></p>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/git_tag/#content" class="pageNav"  >上一篇: git tag</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/unity-GUIDRef/#content" class="pageNav"  >下一篇: unity GUID查看项目资源使用情况工具</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "20161214011000",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+

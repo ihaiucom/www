@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>Unity Sprite Border Shader (Sprite描边)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+    <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shThemeDefault.css"/>
+
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushCSharp.js"></script>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+      
+
+      
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>Unity Sprite Border Shader (Sprite描边)</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2016-11-09">2016-11-09</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#Shader" title="Shader">Shader</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#Unity" title="Unity">Unity</a>&nbsp;
+  
+  <a href="/tags/#Shader" title="Shader">Shader</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<p>
+	<img src="/assets/docpic/unity-sprite_border_shader.png" />
+</p>
+
+<p>
+	<img src="/assets/docpic/unity-sprite_border_shader2.png" />
+</p>
+
+<pre class="brush: csharp; ">
+Shader "Sprites/Border"
+{
+	Properties
+	{
+		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_Color ("Tint", Color) = (1,1,1,1)
+		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
+
+		_LineColor ("Line Color", Color) = (1,1,1,1)
+		_OutLineWidth ("_OutLineWidth", float) = 0.01
+		_BlurPower("_BlurPower", float) = 3
+		[MaterialToggle] NeedPic ("Need Pic", Float) = 1
+		_BlurColorMix("_BlurColorMix", float) = 1
+		_StepX ("_StepX", float) = 1
+		_StepY ("_StepY", float) = 1
+	}
+
+	SubShader
+	{
+		Tags
+		{ 
+			"Queue"="Transparent" 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
+			"PreviewType"="Plane"
+			"CanUseSpriteAtlas"="True"
+		}
+
+		Cull Off
+		Lighting Off
+		ZWrite Off
+		Blend One OneMinusSrcAlpha
+
+		Pass
+		{
+		CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma multi_compile _ PIXELSNAP_ON
+			#pragma multi_compile _ NEEDPIC_ON
+			#pragma shader_feature ETC1_EXTERNAL_ALPHA
+			#include "UnityCG.cginc"
+			
+			struct appdata_t
+			{
+				float4 vertex   : POSITION;
+				float4 color    : COLOR;
+				float2 texcoord : TEXCOORD0;
+			};
+
+			struct v2f
+			{
+				float4 vertex   : SV_POSITION;
+				fixed4 color    : COLOR;
+				float2 texcoord  : TEXCOORD0;
+			};
+			
+			fixed4 _Color;
+
+			fixed4 _LineColor;
+			half _OutLineWidth;
+			half _BlurPower;
+			half _BlurColorMix;
+			half _StepX;
+			half _StepY;
+
+			v2f vert(appdata_t IN)
+			{
+				v2f OUT;
+				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
+				OUT.texcoord = IN.texcoord;
+				OUT.color = IN.color * _Color;
+				#ifdef PIXELSNAP_ON
+				OUT.vertex = UnityPixelSnap (OUT.vertex);
+				#endif
+
+				return OUT;
+			}
+
+			sampler2D _MainTex;
+			sampler2D _AlphaTex;
+
+			fixed4 SampleSpriteTexture (float2 uv)
+			{
+				fixed4 color = tex2D (_MainTex, uv);
+
+#if ETC1_EXTERNAL_ALPHA
+				// get the color from an external texture (usecase: Alpha support for ETC1 on android)
+				color.a = tex2D (_AlphaTex, uv).r;
+#endif //ETC1_EXTERNAL_ALPHA
+
+
+
+
+				half xLength = _StepX * _OutLineWidth;
+				half yLength = _StepY * _OutLineWidth;
+
+				half weight = 0.1;
+				half alpha 	 = tex2D(_MainTex, uv + float2(xLength , 0)).a 				* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2(-xLength , 0)).a 			* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2( 0, yLength)).a 				* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2( 0, -yLength)).a 			* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2(xLength , yLength)).a 		* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2(xLength , -yLength)).a 		* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2(-xLength , yLength)).a 		* weight;
+				alpha 		+= tex2D(_MainTex, uv + float2(-xLength , -yLength)).a 		* weight;
+
+
+
+				half4 outCol = _LineColor ;
+
+				outCol.a = max(0,(alpha - color.a));//外侵蚀 
+				outCol.a *= _BlurPower;
+
+				fixed4 finalCol;
+
+				//finalCol.rgb = outCol.rgb * outCol.a;
+				//finalCol.a = outCol.a;
+				
+				finalCol.rgb = outCol.rgb * min(1, outCol.a);
+				finalCol.a = min(1, outCol.a);
+
+
+				#ifdef NEEDPIC_ON
+				finalCol.rgb += color.rgb * step(outCol.a, 0);
+				finalCol.a += lerp( outCol.a, color.a, _BlurColorMix);
+				#endif
+
+
+				return finalCol;
+			}
+
+			fixed4 frag(v2f IN) : SV_Target
+			{
+				fixed4 c = SampleSpriteTexture (IN.texcoord) * IN.color;
+				c.rgb *= c.a;
+				return c;
+			}
+		ENDCG
+		}
+	}
+}
+</pre>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/mac_apache/#content" class="pageNav"  >上一篇: 【笔记】apache 命令</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/mac_protoc-gen-lua/#content" class="pageNav"  >下一篇: 【笔记】protoc-gen-lua protoc -v 2.5</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "20161108193600",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+

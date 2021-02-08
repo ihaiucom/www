@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>C# 线程请求HTTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+    <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shThemeDefault.css"/>
+
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushCSharp.js"></script>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+      
+
+      
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>C# 线程请求HTTP</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2017-05-19">2017-05-19</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#C#" title="C#">C#</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#C#" title="C#">C#</a>&nbsp;
+  
+  <a href="/tags/#Mac" title="Mac">Mac</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<h2 class="nav1">ThreadHttpWebRequest </h2>
+
+<pre class="brush: csharp; ">
+using UnityEngine;
+using System.Collections;
+using System;
+using System.Net;
+using System.IO;
+using UnityEngine.UI;
+
+
+public class ThreadHttpWebRequest
+{
+    public class ThreadHttpGet
+    {
+        public string name = &quot;ThreadHttpGet&quot;;
+        public string url;
+        public Action&lt;bool, string&gt; callback;
+        public int      timeout = 10;
+        public bool     isEnd       = false;
+        public bool     isSuccess   = false;
+        public string   result      = null;
+
+
+        public IEnumerator Coroutine()
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Timeout = 10;
+            //异步请求
+            IAsyncResult asyncResult = request.BeginGetResponse(requestCompleted, request);
+            Log(&quot;Main&quot;, &quot;任务开始&quot;);
+
+            float t = 0;
+            while(!isEnd)
+            {
+                yield return new WaitForEndOfFrame();
+                t += Time.unscaledDeltaTime;
+                if (t &gt; timeout)
+                {
+                    try
+                    {
+                        request.EndGetResponse(asyncResult);
+                    }
+                    catch(Exception e)
+                    {
+                        Log(&quot;Main&quot;, &quot;请求超时 e=&quot; + e);
+                    }
+
+                    isEnd       = true;
+                    isSuccess   = false;
+                    result      = &quot;请求超时 timeout=&quot; + timeout + &quot;  t=&quot; + t;
+                }
+            }
+
+            Log(&quot;Main&quot;, &quot;IsCompleted=&quot; + asyncResult.IsCompleted);
+            if (callback != null)
+            {
+                callback(isSuccess, result);
+            }
+        }
+
+
+        //回调函数 此方法不是在Main线程运行
+        private void requestCompleted(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null || asyncResult.AsyncState==null)
+            {
+                Log(&quot;Callback&quot;, &quot;回调失败&quot;);
+                isEnd       = true;
+                isSuccess   = false;
+                result      = &quot;回调失败&quot;;
+                return;
+            }
+            HttpWebRequest hwr = asyncResult.AsyncState as HttpWebRequest;
+            HttpWebResponse response = (HttpWebResponse)hwr.EndGetResponse(asyncResult);
+            StreamReader sr = new StreamReader(response.GetResponseStream());
+            string str = sr.ReadToEnd();
+
+            isEnd       = true;
+            isSuccess   = true;
+            result      = str;
+
+            Log(&quot;Callback&quot;,&quot;返回流长度:&quot; + str.Length + &quot;  &quot; + str);
+
+        }
+
+        private void Log(string threadName, string msg)
+        {
+            Debug.LogFormat(&quot;{1} {0} {4} [{2}]  {3}&quot;, name, time, threadName, msg, url);
+        }
+
+        private void Error(string threadName, string msg)
+        {
+            Debug.LogErrorFormat(&quot;{1} {0} {4} [{2}]  {3}&quot;, name, time, threadName, msg, url);
+        }
+
+
+
+        public string time
+        {
+            get
+            {
+                return DateTime.Now.ToString(&quot;mm：ss：ffff&quot;);
+            }
+        }
+    }
+
+    public class ThreadHttpUpload
+    {
+        public string name = &quot;ThreadHttpUpload&quot;;
+        public string url;
+        public Action&lt;bool, string&gt; callback;
+        public bool     isEnd       = false;
+        public bool     isSuccess   = false;
+        public string   result      = null;
+
+
+        public IEnumerator Coroutine(byte[] bindata, CookieContainer cookie, int timeout = 10)
+        {
+            
+            HttpWebRequest request = null;
+            HttpWebRequest req = null;
+            Stream myRequestStream = null;
+            HttpWebResponse wr = null;
+
+            request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = &quot;POST&quot;;
+            request.ContentType = &quot;application/octet-stream&quot;;
+            request.ContentLength = bindata.Length;
+            request.Timeout = timeout;
+            if(cookie != null) request.CookieContainer = cookie;
+
+            try
+            {
+                request.BeginGetRequestStream((IAsyncResult result)=&gt;
+                    {
+                        if (!result.IsCompleted)
+                        {
+                            Debug.LogError(&quot;上传 写入数据失败&quot;);
+                            return;
+                        }
+
+
+
+                        myRequestStream = request.EndGetRequestStream(result);
+                        myRequestStream.Write(bindata, 0, bindata.Length);
+                    }, request);
+                
+            }
+            catch (Exception e)
+            {
+                Error(&quot;Main&quot;, &quot;上传 写入数据异常 e=&quot; + e);
+
+                isEnd = true;
+                isSuccess = false;
+                result = &quot;上传 写入数据异常 e=&quot; + e;
+                if (callback != null)
+                {
+                    callback(isSuccess, result);
+                }
+                yield break;
+            }
+
+
+            //异步请求
+            IAsyncResult asyncResult = request.BeginGetResponse(requestCompleted, request);
+            Log(&quot;Main&quot;, &quot;任务开始&quot;);
+
+            float t = 0;
+            while(!isEnd)
+            {
+                yield return new WaitForEndOfFrame();
+                t += Time.unscaledDeltaTime;
+                if (t &gt; timeout)
+                {
+                    try
+                    {
+                        request.EndGetResponse(asyncResult);
+                    }
+                    catch(Exception e)
+                    {
+                        Log(&quot;Main&quot;, &quot;请求超时 e=&quot; + e);
+                    }
+
+                    isEnd       = true;
+                    isSuccess   = false;
+                    result      = &quot;请求超时 timeout=&quot; + timeout + &quot;  t=&quot; + t;
+                }
+            }
+
+            Log(&quot;Main&quot;, &quot;IsCompleted=&quot; + asyncResult.IsCompleted);
+            if (callback != null)
+            {
+                callback(isSuccess, result);
+            }
+        }
+
+
+        //回调函数 此方法不是在Main线程运行
+        private void requestCompleted(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null || asyncResult.AsyncState==null)
+            {
+                Log(&quot;Callback&quot;, &quot;回调失败&quot;);
+                isEnd       = true;
+                isSuccess   = false;
+                result      = &quot;回调失败&quot;;
+                return;
+            }
+            HttpWebRequest hwr = asyncResult.AsyncState as HttpWebRequest;
+            HttpWebResponse response = (HttpWebResponse)hwr.EndGetResponse(asyncResult);
+            StreamReader sr = new StreamReader(response.GetResponseStream());
+            string str = sr.ReadToEnd();
+
+            isEnd       = true;
+            isSuccess   = true;
+            result      = str;
+
+            Log(&quot;Callback&quot;,&quot;返回流长度:&quot; + str.Length + &quot;  &quot; + str);
+
+        }
+
+        private void Log(string threadName, string msg)
+        {
+            Debug.LogFormat(&quot;{1} {0} {4} [{2}]  {3}&quot;, name, time, threadName, msg, url);
+        }
+
+        private void Error(string threadName, string msg)
+        {
+            Debug.LogErrorFormat(&quot;{1} {0} {4} [{2}]  {3}&quot;, name, time, threadName, msg, url);
+        }
+
+
+        public string time
+        {
+            get
+            {
+                return DateTime.Now.ToString(&quot;mm：ss：ffff&quot;);
+            }
+        }
+    }
+
+
+
+    public static ThreadHttpGet StartGet(string url, Action&lt;bool, string&gt; callback, MonoBehaviour mono, int timeout = 10, string name = null)
+    {
+        ThreadHttpGet thread = new ThreadHttpGet();
+        thread.name = string.IsNullOrEmpty(name) ? &quot;ThreadHttpGet&quot; : name;
+        thread.url  = url;
+        thread.callback  = callback;
+        thread.timeout = timeout;
+
+
+        mono.StartCoroutine(thread.Coroutine());
+        return thread;
+    }
+
+
+    public static ThreadHttpUpload StartUpload(string url, CookieContainer cookie , byte[] bindata, Action&lt;bool, string&gt; callback, MonoBehaviour mono, int timeout = 10, string name = null)
+    {
+        
+
+        ThreadHttpUpload thread = new ThreadHttpUpload();
+        thread.name = string.IsNullOrEmpty(name) ? &quot;ThreadHttpUpload&quot; : name;
+        thread.url  = url;
+        thread.callback  = callback;
+
+
+        mono.StartCoroutine(thread.Coroutine(bindata, cookie, timeout));
+        return thread;
+    }
+
+
+}
+</pre>
+
+<h2 class="nav1">ThreadHttpWebRequest </h2>
+
+<pre class="brush: csharp; ">
+using UnityEngine;
+using System.Collections;
+using System;
+using System.Net;
+using System.IO;
+using UnityEngine.UI;
+
+public class TestThreadHttpWebRequest : MonoBehaviour {
+
+    public void OnGUI()
+    {
+        GUI.Label(new Rect(Screen.width - 100, 20, 100, 50), Time.frameCount + &quot;&quot;);
+
+        if (GUI.Button(new Rect(10, 10, 100, 50), &quot;Get&quot;))
+        {
+            ThreadHttpWebRequest.StartGet(url, OnEnd, this);
+        }
+
+
+        if (GUI.Button(new Rect(200, 10, 100, 50), &quot;Upload&quot;))
+        {
+            string urlpath = &quot;http://192.168.1.21:8080/video_upload?type=6&quot;;
+            byte[] data = File.ReadAllBytes(&quot;Assets/StreamingAssets/test_WarEnterData.json&quot;);
+            ThreadHttpWebRequest.StartUpload(urlpath, VideoCookie(urlpath, 1, 0, null), data, OnEnd, this);
+        }
+
+
+        if (GUI.Button(new Rect(200, 60, 100, 50), &quot;GetMyFile&quot;))
+        {
+            string urlpath = &quot;http://192.168.1.21:8080/video_get?roleid=0&amp;videoid=1&amp;leagueId=0&amp;type=6&quot;;
+            ThreadHttpWebRequest.StartGet(urlpath,  OnEnd, this);
+        }
+
+        GUI.TextArea(new Rect(10, Screen.height - 300, Screen.width, 280), result);
+    }
+
+    public void OnEnd(bool isSuccess, string result)
+    {
+        this.isSucces = isSucces;
+        this.result = result;
+
+        if (text != null)
+            text.text = result;
+    }
+
+    public string url = &quot;http://blog.ihaiu.com&quot;;
+    public string isSucces;
+    public string result = &quot;&quot;;
+    public Text text;
+
+
+    private CookieContainer VideoCookie(string url, int videoId, int leagueId, string sessionId = null)
+    {
+
+        if (string.IsNullOrEmpty(sessionId))
+        {
+            sessionId = &quot;0&quot;;
+        }
+
+        Uri target = new Uri(url);
+
+        CookieContainer videoCookie = new CookieContainer();
+        videoCookie.Add(new Cookie(&quot;sessionId&quot;, sessionId){Domain=target.Host} );
+        videoCookie.Add(new Cookie(&quot;videoId&quot;, videoId.ToString()){Domain=target.Host} );
+        videoCookie.Add(new Cookie(&quot;leagueId&quot;, leagueId.ToString()) { Domain = target.Host });
+        return videoCookie;
+    }
+
+}
+
+</pre>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/csharp-bit/#content" class="pageNav"  >上一篇: C# 位运算</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/ihaiu_Loger/#content" class="pageNav"  >下一篇: ihaiu.Loger C#用来适配 Console.WriteLine 和 Unity Debug</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "20170519130000",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+

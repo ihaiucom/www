@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="ihaiu" />
+    <title>Unity profiler 性能查看器里面描述的含义</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/github-light.css" media="screen">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/offlintab-439.css">
+    <link type="stylesheet" rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- <link type="stylesheet" rel="stylesheet" href="/stylesheets/about-grid.css"> -->
+
+
+    <!-- <link href="/feed/" rel="alternate" title="ihaiu" type="application/atom+xml" /> -->
+
+    <link rel="shortcut icon" href="/assets/icon/favicon.ico" />
+
+    <link href="/assets/icon/favicon.ico" type="image/x-icon" rel="shortcut icon bookmark" />
+    <link rel="apple-touch-icon-precomposed" href="assets/icon/icon32.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/icon/icon76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/icon/icon120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/icon/icon152.png">
+
+  <!-- 
+  <script src="http://www.it165.net/statics/js//it165_pro.js" type="text/javascript"></script>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>
+  -->
+
+
+           
+    <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/media/syntaxhighlighter_2.0.278/styles/shThemeDefault.css"/>
+
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushCSharp.js"></script>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      <script type="text/javascript" src="/media/syntaxhighlighter_2.0.278/scripts/shBrushJava.js"></script>
+      
+
+
+      
+
+      
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+
+
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+
+   
+
+  </head>
+
+  <body>
+    <section class="page-header">
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 style="background-image: url('/assets/icon/icon76_white.png'); background-position: center center; background-repeat:no-repeat; height:76px; margin:0px;"></h1></a>
+      <a href="http://www.ihaiu.com" class="iconbtn"><h1 class="project-name" >爱海游</h1></a>
+      <h2 class="project-tagline">ihaiu.com</h2>
+      <a href="/#content" class="btn">目录</a>
+      <a href="/categories/#content" class="btn">分类</a>
+     <!--  <a href="/guestbook/#content" class="btn">留言</a> -->
+     <!--  <a href="/about/#content" class="btn">关于</a> -->
+      <a href="/opensource/#content" class="btn">开源分享</a>
+      <a href="/share/#content" class="btn">分享</a>
+     <!--  <a href="/share/gameart#content" class="btn">游戏美术</a> -->
+      <a href="/friendlylink/#content" class="btn">友情链接</a>
+    </section>
+
+
+
+
+
+    <section class="main-content" id="content">
+
+      <h1>Unity profiler 性能查看器里面描述的含义</h1>
+      <article class="content">
+        <section class="meta">
+<span class="time">
+  <time datetime="2017-06-23">2017-06-23</time>
+</span>
+
+ | 
+<span class="categories">
+  发布
+  <a href="tencent://message/?uin=593705098" title="发布:大海明月 QQ:593705098" rel="author">大海明月</a>&nbsp;
+  
+  <a href="mailto:zengfeng75@qq.com" title="发布:大海明月 Email:zengfeng75@qq.com" rel="author">zengfeng75@qq.com</a>&nbsp;
+  
+</span>
+
+
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#Unity" title="Unity">Unity</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#Unity" title="Unity">Unity</a>&nbsp;
+  
+  <a href="/tags/#优化" title="优化">优化</a>&nbsp;
+  
+  <a href="/tags/#profiler" title="profiler">profiler</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<p><br /></p>
+
+<table width="95%" style="word-wrap:break-word;table-layout:fixed;">
+    <!-- 渲染模块 -->
+    <tr>
+        <th>Camera.Render</th>
+        <th>渲染模块</th>
+    </tr>
+
+
+
+    <!-- 渲染模块/不透明渲染 -->
+    <tr style="background-color: #88CCEE; font-weight:bold;">
+        <td>Render.OpaqueGeometry</td>
+        <td>不透明渲染</td>
+    </tr>
+
+
+     <tr style="background-color: #AADDFF; ">
+        <td>MeshRenderer.Render</td>
+        <td>非蒙皮网格渲染</td>
+    </tr>
+
+     <tr style="background-color: #AADDFF; ">
+        <td>Mesh.DrawVBO</td>
+        <td>Draw Call</td>
+    </tr>
+    
+     <tr style="background-color: #AADDFF; ">
+        <td>MeshShinning.Render</td>
+        <td>蒙皮网格渲染</td>
+    </tr>
+
+     <tr style="background-color: #AADDFF; ">
+        <td>Material.SetPassFast</td>
+        <td>场景中不同材质数量造成；和DrawCall类似，如果两个相同材质物体中间有一个其他材质的物体，就无法合批，这个材质就会成2个SetPassFast</td>
+    </tr>
+
+
+    <!-- 渲染模块/半透明渲染 -->
+    <tr> <td colspan="2" height="3px"> </td> </tr>
+
+    <tr style="background-color: #88EECC; font-weight:bold;">
+        <td>Render.TransparentGeometry</td>
+        <td>半透明渲染</td>
+    </tr>
+
+     <tr style="background-color: #AAFFDD; ">
+        <td>Mesh.DrawVBO</td>
+        <td>NGUI 一般藏在这里面</td>
+    </tr>
+    
+     <tr style="background-color: #AAFFDD; ">
+        <td>ParticleSystem.ScheduleGeometryJobs</td>
+        <td>粒子系统</td>
+    </tr>
+
+     <tr style="background-color: #AAFFDD; ">
+        <td>ParticleSystem.SubmitVBO</td>
+        <td>粒子系统渲染,提交粒子系统VBO的操作</td>
+    </tr>
+    
+     <tr style="background-color: #AAFFDD; ">
+        <td>BatchRenderer.Add</td>
+        <td>UGUI一般藏在这里面, Canvas绑定了Camera的会显示在这里面。没有绑定Camera的Canvas不会显示在这里（Camera.Render）</td>
+    </tr>
+
+
+    <!-- 渲染模块/相机裁剪 -->
+    <tr> <td colspan="2" height="3px"> </td> </tr>
+
+    <tr style="background-color: #88CCEE; font-weight:bold;">
+        <td>Culing</td>
+        <td>相机裁剪</td>
+    </tr>
+
+
+
+     <tr style="background-color: #AADDFF; ">
+        <td>ParticleSystem.ScheduleGeometryJobs</td>
+        <td>
+        这个函数不仅出现在Render.TransparentGeometry，也会出现在Culing里。通常他的时间占比比较高（2%-3%左右）。<br /><br />
+        如果粒子系统没有在摄像视窗内就不会有；如果在摄像机视窗内部的粒子系统越多,消耗越大。所以与摄像机视窗内粒子系统个数成正比。<br /><br />
+        主线程：ParticleSystem.ScheduleGeometryJobs<br /><br />
+        子线程：ParticleSystem.GeometryJobs<br /><br />
+        分析：  主线程做任务调度，子线程做粒子模拟<br />
+        </td>
+    </tr>
+
+    <!-- 渲染模块/图形后期处理 -->
+    <tr> <td colspan="2" height="3px"> </td> </tr>
+
+    <tr style="background-color: #88EECC; font-weight:bold;">
+        <td>Camera.ImageEffects</td>
+        <td>图形后期处理</td>
+    </tr>
+
+
+
+
+</table>
+<p><br />
+<br /></p>
+
+<!-- 渲染模块 -->
+<h1 class="nav1">渲染模块</h1>
+<p><img src="/assets/docpic/unity_profiler_00.png" style="border: solid 1px #666;" /></p>
+
+<!-- 渲染模块/不透明渲染 -->
+<p><br /></p>
+<h1 class="nav2">渲染模块/不透明渲染</h1>
+<p><img src="/assets/docpic/unity_profiler_01.png" style="border: solid 1px #666;" /></p>
+
+<!-- 渲染模块/不透明渲染/Material.SetPassFast -->
+<p><br /></p>
+<h3>Material.SetPassFast</h3>
+<p><img src="/assets/docpic/unity_profiler_02.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_03.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_04.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_05.jpg" style="border: solid 1px #666;" /></p>
+<p>Render State包含深度测试、半透明渲染、Blend混合、材质Texture修改和绑定.<br />所以优化不仅要控制DrawCall，还有控制Material的数量，不能太多。</p>
+
+<!-- 渲染模块/半透明渲染 -->
+<p><br /></p>
+<h1 class="nav2">渲染模块/半透明渲染</h1>
+<p><img src="/assets/docpic/unity_profiler_06.jpg" style="border: solid 1px #666;" /></p>
+
+<!-- 渲染模块/相机裁剪 -->
+<p><br /></p>
+<h1 class="nav2">渲染模块/相机裁剪</h1>
+<p><img src="/assets/docpic/unity_profiler_07.jpg" style="border: solid 1px #666;" /></p>
+
+<h3>ParticleSystem.ScheduleGeometryJobs</h3>
+<p><img src="/assets/docpic/unity_profiler_08.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_09.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_10.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_11.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_12.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_13.jpg" style="border: solid 1px #666;" /></p>
+
+<h1 class="nav1">渲染模块,如何优化?</h1>
+<p>根据上面提到的查看profiler，定位问题出在哪个定方。然后去对美术效果做删减，让美术效果和运行效率做一个平衡。</p>
+<p><br /></p>
+<h3>问题方向</h3>
+<p><img src="/assets/docpic/unity_profiler_14.jpg" style="border: solid 1px #666;" /></p>
+
+<p><img src="/assets/docpic/unity_profiler_15.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_16.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_17.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_18.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_19.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_20.jpg" style="border: solid 1px #666;" /></p>
+
+<p><br />
+<br /></p>
+<h1 class="nav2">定量实验分析 不透明物体渲染性能实验</h1>
+<p><img src="/assets/docpic/unity_profiler_21.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_22.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_23.jpg" style="border: solid 1px #666;" /></p>
+<p>纵坐标：渲染耗时 单位毫秒。</p>
+<p>横坐标：物体面片数。</p>
+<p>柱状图：不同颜色材质数量</p>
+<p>发现1：随着材质数的增加，渲染耗时也增加；物体面片数的增加，渲染耗时并不那么明显。</p>
+<p>发现2：60个物体图和120个物体图对比，可以发现因为Draw Call数量的增加，对渲染耗时有比较大的影响。</p>
+<p><br /></p>
+<p><img src="/assets/docpic/unity_profiler_24.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_25.jpg" style="border: solid 1px #666;" /></p>
+<p>为什么小于5毫秒呢？<br />
+因为游戏一般以30帧为界限。<br />
+假如游戏设定帧频为30帧，那么每帧的时间是33毫秒。<br />
+在这33毫秒中分配给渲染大概是15毫秒。<br />
+在这15毫秒中要做：不透明物体渲染、半透明物体渲染、阴影、粒子系统、图像后处理等。<br />
+所以分配给不透明物体渲染的时间大概在3-5毫秒。<br /><br />
+在本次测试中不开启多线程渲染，为什么呢？<br />
+因为开启了多线程渲染，主线程中提交DrawCall与图像API的交互操作转移到了渲染线程。使得用Camera.Render衡量不准确。
+</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_26.jpg" style="border: solid 1px #666;" /></p>
+
+<p>横向表头：面片数</p>
+<p>纵向表头：物体数量</p>
+<p>boady：渲染耗时，小于5毫秒用红色标识。可以看到在红米2中没有小于5毫秒的情况</p>
+<p>可以看到在红米2中没有小于5毫秒的情况，因此在红米2上建议采用面片数量小于600的模型，物体数量小于60个。</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_27.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_28.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_29.jpg" style="border: solid 1px #666;" /></p>
+<p><br />
+<br /></p>
+<h1 class="nav2">定量实验分析 不透明物体渲染性能实验</h1>
+<p><img src="/assets/docpic/unity_profiler_30.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_31.jpg" style="border: solid 1px #666;" /></p>
+
+<p>纵向表头：渲染耗时</p>
+<p>横向表头：粒子系统数量</p>
+<p>柱状图：单个粒子系统的粒子统数量</p>
+<p>红米2中可以看到：</p>
+<p>粒子系统数量越多，消耗越大。</p>
+<p>粒子系统中的粒子数量越多，消耗越大。</p>
+<p><br /></p>
+<p><img src="/assets/docpic/unity_profiler_32.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_33.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_34.jpg" style="border: solid 1px #666;" /></p>
+
+<p>横向表头：单个粒子系统的粒子统数量</p>
+<p>纵向表头：粒子系统数量</p>
+<p>boady：渲染耗时，小于5毫秒用红色标识。可以看到在红米2中小于5毫秒的情况设置是30个粒子系统，单个粒子系统的粒子个数40</p>
+<p><br /></p>
+<p><img src="/assets/docpic/unity_profiler_35.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_36.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_37.jpg" style="border: solid 1px #666;" /></p>
+
+<p><br />
+<br /></p>
+<h1 class="nav2">定量实验分析 Shadow</h1>
+<p><img src="/assets/docpic/unity_profiler_38.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_39.jpg" style="border: solid 1px #666;" /></p>
+<p>纵向表头：Camera.Render渲染总耗时 （毫秒）</p>
+<p>横向表头：物体的个数</p>
+<p>柱状图：表示低、中、高三种分辨率的ShadowMap</p>
+<p>红米2测试，面片数选择500个</p>
+<p>ShadowMap分辨率 （低、中）和（高）有很大的差距</p>
+<p>ShadowMap分辨率 （低）和（中）差距不是很大</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_40.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_41.jpg" style="border: solid 1px #666;" /></p>
+<p>横向表头：单个物体的面片数量</p>
+<p>纵向表头：物体数量</p>
+<p>boady：渲染耗时，小于5毫秒用红色标识。可以看到在红米2中没有小于5毫秒的情况,因此在红米2上建议不要开启实时阴影。</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_42.jpg" style="border: solid 1px #666;" /></p>
+<p>红米note2中最大支持面片数为1500个的物体20个。</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_43.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_44.jpg" style="border: solid 1px #666;" /></p>
+
+<p><br />
+<br /></p>
+<h1 class="nav2">定量实验分析 PBR与简单光照对比</h1>
+<p><img src="/assets/docpic/unity_profiler_45.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_46.jpg" style="border: solid 1px #666;" /></p>
+<p>纵向表头：Camera.Render渲染总耗时 （毫秒）</p>
+<p>横向表头：物体的个数</p>
+<p>蓝色：diffuse材质，没有贴图</p>
+<p>红色：diffuse材质，有贴图</p>
+<p>灰色：pdr材质</p>
+<p><br /></p>
+<p>发现：pdr材质比diffuse耗时高一些，没有高很多，60个物体高2ms，300个物体高4ms。</p>
+<p>为什么呢？</p>
+<p>因为pdr的主要工作在gpu</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_47.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_48.jpg" style="border: solid 1px #666;" /></p>
+<p>横向表头：单个物体的面片数量</p>
+<p>纵向表头：物体数量</p>
+<p>boady：渲染耗时，小于5毫秒用红色标识。可以看到在红米2中没有小于5毫秒的情况,因此在红米2上建议不要使用pdr。</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_49.png" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_50.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_51.jpg" style="border: solid 1px #666;" /></p>
+
+<p><br />
+<br /></p>
+<h1 class="nav2">定量实验分析 多线程性能提升实验</h1>
+<p><img src="/assets/docpic/unity_profiler_52.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_53.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_54.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_55.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_56.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_57.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_58.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_59.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_60.jpg" style="border: solid 1px #666;" /></p>
+<p><br />
+<br /></p>
+<h2 class="nav1">GPU 像素填充率及Over Draw</h2>
+<p><img src="/assets/docpic/unity_profiler_60.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_61.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_62.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_63.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_64.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_65.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_66.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_67.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_68.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_69.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_70.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_71.jpg" style="border: solid 1px #666;" /></p>
+<p><br />
+<br /></p>
+<h2 class="nav1">GPU MipMap</h2>
+<p><img src="/assets/docpic/unity_profiler_72.jpg" style="border: solid 1px #666;" /></p>
+<p><img src="/assets/docpic/unity_profiler_73.jpg" style="border: solid 1px #666;" /></p>
+
+<p><br />
+<br /></p>
+<h2 class="nav1">GPU Culling</h2>
+<p><img src="/assets/docpic/unity_profiler_74.jpg" style="border: solid 1px #666;" /></p>
+<p>Occlusion Culling, Unity Camrea的功能。对场景中静态的物体预计算，然后在动态渲染的时候查预算的数据分析静态物体是否被其他静态物体遮挡。如果遮挡了，就把该物体刨除掉从而降低Draw Call。但是查询CullQueryPortalVisibityUmbra是有一定开销的</p>
+<p><img src="/assets/docpic/unity_profiler_75.jpg" style="border: solid 1px #666;" /></p>
+<p>有些特殊情况，我们对比开启和关闭Occlusion Culling发现：</p>
+<p>Occlusion Culling 开启有一定的开销</p>
+<p>Draw Call并没有什么变化</p>
+<p>因此在这种情况下，可以不开启</p>
+<p><br /></p>
+
+<p><img src="/assets/docpic/unity_profiler_76.jpg" style="border: solid 1px #666;" /></p>
+<p>减少Draw Call的几种方法</p>
+<p>Static Batching:对于静态物体</p>
+<p>Dynamic Batching:对于动态物体</p>
+<p>GPU Instancing:Unity5.4以后的版本，支持GPU3.1，对CPU没有开销，在GUP有一点点Shader开销。</p>
+<p>Static Batching和Dynamic Batching对CUP和内存都有而外的开销，他们对对顶点重新计算</p>
+<p><br /></p>
+
+<p><br />
+<br /></p>
+<h2 class="nav1">相关文档</h2>
+<p><a target="_blank" href="https://v.qq.com/x/page/y051477ktzc.html">UWA六月直播季第二弹之Unity引擎渲染效率全解析 </a></p>
+<p><a target="_blank" href="https://v.qq.com/x/page/r0329jx2ijw.html">UWA直播回顾| UGUI性能优化技巧</a></p>
+<p><a target="_blank" href="http://www.cnblogs.com/zhaoqingqing/p/5059479.html">Unity Profiler 性能分析</a></p>
+<p><a target="_blank" href="https://sanwen.net/a/hhczzoo.html">PBR的基本理论</a></p>
+
+</section>
+<section class="page">
+
+	 
+  <span><a href="/ihaiu_Loger/#content" class="pageNav"  >上一篇: ihaiu.Loger C#用来适配 Console.WriteLine 和 Unity Debug</a></span>
+  <br/>
+  
+
+  
+	<span><a href="/SublimeTextSettings/#content" class="pageNav"  >下一篇: Sublime Text 屏蔽meta格式的文件</a></span>
+   
+
+</section>
+
+
+<div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: document.location.href, 
+    sourceId: "2017031012510000",
+    productKey: "97dc4b8e4aeb41ca8606d2c6efa6eae3",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+
+
+      </article>
+
+
+      <footer class="site-footer">
+
+          <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?aa2fdee733dec8a2399b5bc0efbfd843";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+        <span class="site-footer-credits"><a href="http://www.ihaiu.com">爱海游</a></span> |
+        <span class="site-footer-credits"><a href="http://blog.ihaiu.com">博客</a></span> |
+
+        <script src="http://s4.cnzz.com/z_stat.php?id=1260003113&web_id=1260003113" language="JavaScript"></script>
+
+        <p align="center">版权所有：©2021 ihaiu.com 版权所有ICP证： <a href="https://beian.miit.gov.cn/" target="_blank">沪ICP备2021002336号</a></p>
+      </footer>
+
+    </section>
+
+
+  
+  </body>
+</html>
+
+
